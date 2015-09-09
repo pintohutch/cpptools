@@ -5,9 +5,20 @@
 // Headers
 #include <iostream>
 
+// Namespace
+using namespace std;
+
 // Main function
 int main() {
-    std::cout << "Hello, world!\n";
+    // Init variables
+    int x;
+
+    // Read input to x
+    cin >> x;
+
+    // Print statements to terminal
+    cout << x/3 << ' ' << x*2;
+    cout << "Hello, world!\n";
 
     return 0;
 }
