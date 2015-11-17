@@ -1,2 +1,2 @@
-# ml-tools-cpp
-Machine learning tools C++
+# cpp-tools
+General tools written in C++
