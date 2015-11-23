@@ -72,7 +72,8 @@ void merge(int * arr, const int low, const int mid, const int high)
         work_idx++;
     }
 
-    // If first half idx made it past mid, then first half is sorted
+    // First part of array is all sorted
+    // Sorted all we can so far, re-populate array with leftovers
     if(fhalf_idx > mid)
     {
         for(int k = lhalf_idx; k <= high; k++)
@@ -81,6 +82,8 @@ void merge(int * arr, const int low, const int mid, const int high)
             work_idx++;
         }
     }
+    // Sorted from mid to end and reached end of array
+    // Sorted all we can so far, re-populate array with leftovers
     else
     {
         for(int k = fhalf_idx; k <= mid; k++)
@@ -95,6 +98,8 @@ void merge(int * arr, const int low, const int mid, const int high)
     {
         arr[k+low] = work_arr[k];
     }
+
+    // Free up memory for working array via delete[]
     delete[] work_arr;
 }
 
@@ -113,10 +118,6 @@ void merge_sort(int * arr, const int low, const int high)
         the low (first) index of the array
     high : constant int
         the high (last) index of the array
-
-    Returns
-    -------
-
     */
 
     // Declare mid point index integer
@@ -125,29 +126,33 @@ void merge_sort(int * arr, const int low, const int high)
 
     // If there is more than one element in array, split it recursively
     if( low < high ) {
+        // Print integer ptr + low index for new array start
         cout << "Splitting array: ";
-        print_array(arr, arr_size);
+        print_array(arr+low, arr_size);
 
         // Get halfway point
         mid = (low+high)/2;
 
         // Split left half recursively until only two elements
+        // Then right half will call this to recursively split right
         cout << "Splitting left side\n";
         merge_sort(arr, low, mid);
 
-        // Split right half - first time with only two elements
+        // Split right half recursively of left half, then of right half
         cout << "Splitting right side\n";
         merge_sort(arr, mid+1, high);
 
-        // Merge the array
+        // Merge and sort the original array within passed indices
         cout << "Merging/sorting array: ";
-        print_array(arr, arr_size);
+        print_array(arr+low, arr_size);
         merge(arr, low, mid, high);
 
         // Print full array so far...
         cout << "Array now: ";
         print_array(arr, 10);
     }
+    // Return when low >= high
+    cout << "Returning from recursion one level...\n";
 }
 
 
