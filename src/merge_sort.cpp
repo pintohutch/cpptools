@@ -9,7 +9,8 @@
 using namespace std;
 
 // Print the array to screen
-void print_array(int * arr, int size) {
+void print_array(int * arr, int size)
+{
     cout << "{";
     // For each element in the array, print to cout
     for (int idx = 0; idx < size; idx++) {
