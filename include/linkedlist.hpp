@@ -11,12 +11,27 @@
 #include <string>
 using namespace std;
 
-struct node
+struct Node
 {
     string song;
     string artist;
     int play_count;
-    node * next;
+    Node * next;
+};
+
+
+class LinkedList
+{
+private:
+    Node * head;
+    int list_length;
+
+public:
+    // Default constructor - creates head node
+    LinkedList();
+
+    // Insert node function
+    bool insert_node(Node * new_node, int index);
 };
 
 #endif //CPPTOOLS_LINKEDLIST_H
