@@ -12,13 +12,13 @@ using namespace std;
 struct node
 {
     int x;
-    node * next;
+    node* next;
 };
 
 
 int main()
 {
-    node * root;
+    node* root;
 
     root = new node;
 

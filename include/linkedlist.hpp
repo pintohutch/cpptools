@@ -16,14 +16,14 @@ struct Node
     string song;
     string artist;
     int play_count;
-    Node * next;
+    Node* next;
 };
 
 
 class LinkedList
 {
 private:
-    Node * head;
+    Node* head;
     int list_length;
 
 public:
@@ -31,7 +31,7 @@ public:
     LinkedList();
 
     // Insert node function
-    bool insert_node(Node * new_node, int index);
+    bool insert_node(Node* new_node, int index);
 };
 
 #endif //CPPTOOLS_LINKEDLIST_H
