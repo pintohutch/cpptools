@@ -1,19 +1,21 @@
-#
-# TODO: Move `libmongoclient.a` to /usr/local/lib so this can work on production servers
-#
- 
 CC := g++ # This is the main compiler
 # CC := clang --analyze # and comment out the linker last line for sanity
 SRCDIR := src
 BUILDDIR := build
 TARGET := bin/runner
- 
+
 SRCEXT := cpp
+# Find all source code cpp files.
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+# Replace src/../filename.cpp with build/../filename.o
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 CFLAGS := -g # -Wall
 LIB := -pthread -lmongoclient -L lib -lboost_thread-mt -lboost_filesystem-mt -lboost_system-mt
 INC := -I include
+
+test:
+	@echo 'SOURCES: "$(SOURCES)"'
+	@echo 'OBJECTS: "$(OBJECTS)"'
 
 $(TARGET): $(OBJECTS)
   @echo " Linking..."
@@ -35,4 +37,6 @@ tester:
 ticket:
   $(CC) $(CFLAGS) spikes/ticket.cpp $(INC) $(LIB) -o bin/ticket
 
+# Phony target ensures clean target will always run regardless if there's a
+# file named clean in the directory or not.
 .PHONY: clean
