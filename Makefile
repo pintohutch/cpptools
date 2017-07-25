@@ -10,7 +10,7 @@ SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 # Replace src/../filename.cpp with build/../filename.o
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 CFLAGS := -g # -Wall
-LIB := -pthread -lmongoclient -L lib -lboost_thread-mt -lboost_filesystem-mt -lboost_system-mt
+LIB := -pthread -L lib -lboost_thread-mt -lboost_filesystem-mt -lboost_system-mt
 INC := -I include
 
 test:
@@ -19,10 +19,15 @@ test:
 
 $(TARGET): $(OBJECTS)
 	@echo " Linking..."
+	# $@ and $^ are the target and dependencies, respectively.
+	# gcc -o <bin/outfile> <object.o> <object2.o> -L lib -l<lib1> -l<lib2>
 	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
+	# $@ and $< are the target and the first dependency, respectively.
+	# g++ -g -I include -c -o <object.o> <infile.cpp>
+	# the -c flag compiles the cpp into object code (no linking).
 	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 clean:
@@ -32,10 +37,6 @@ clean:
 # Tests
 tester:
 	$(CC) $(CFLAGS) test/tester.cpp $(INC) $(LIB) -o bin/tester
-
-# Spikes
-ticket:
-	$(CC) $(CFLAGS) spikes/ticket.cpp $(INC) $(LIB) -o bin/ticket
 
 # Phony target ensures clean target will always run regardless if there's a
 # file named clean in the directory or not.
