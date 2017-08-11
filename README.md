@@ -2,7 +2,7 @@
 General tools written in C++
 
 The project structure here was chosen to follow the Unix Filesystem Hierarchy
-Standard [FHS](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard).
+Standard [FHS](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html).
 
 - bin - Generated executable files.
 - build - Object files generated from source.
