@@ -10,8 +10,10 @@ SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 # Replace src/../filename.cpp with build/../filename.o
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 CFLAGS := -g # -Wall
+# -pthread - enable multithreading.
 LIB := -pthread -L lib -lboost_thread-mt -lboost_filesystem-mt -lboost_system-mt
-INC := -I include
+INC_DIRS := $(shell find . -type d -name include)
+INC := -I $(INC_DIRS)
 
 test:
 	@echo 'SOURCES: "$(SOURCES)"'
@@ -25,6 +27,7 @@ $(TARGET): $(OBJECTS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
+	@echo $(INC_DIRS)
 	# $@ and $< are the target and the first dependency, respectively.
 	# g++ -g -I include -c -o <object.o> <infile.cpp>
 	# the -c flag compiles the cpp into object code (no linking).
