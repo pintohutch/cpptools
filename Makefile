@@ -1,3 +1,7 @@
+# $@ - target
+# $^ dependencies
+# $< first dependency
+#
 CC := g++ # This is the main compiler
 # CC := clang --analyze # and comment out the linker last line for sanity
 SRCDIR := src
@@ -19,18 +23,16 @@ test:
 	@echo 'SOURCES: "$(SOURCES)"'
 	@echo 'OBJECTS: "$(OBJECTS)"'
 
+# gcc -o <bin/outfile> <object.o> <object2.o> -L lib -l<lib1> -l<lib2>
 $(TARGET): $(OBJECTS)
 	@echo " Linking..."
-	# $@ and $^ are the target and dependencies, respectively.
-	# gcc -o <bin/outfile> <object.o> <object2.o> -L lib -l<lib1> -l<lib2>
 	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
 
+# g++ -g -I include -c -o <object.o> <infile.cpp>
+# the -c flag compiles the cpp into object code (no linking).
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
-	@mkdir -p $(BUILDDIR)
+	@mkdir -p `dirname $@`
 	@echo $(INC_DIRS)
-	# $@ and $< are the target and the first dependency, respectively.
-	# g++ -g -I include -c -o <object.o> <infile.cpp>
-	# the -c flag compiles the cpp into object code (no linking).
 	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 clean:

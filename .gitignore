@@ -3,6 +3,7 @@
 *.lo
 *.o
 *.obj
+build/*
 
 # Precompiled Headers
 *.gch
@@ -27,6 +28,7 @@
 *.out
 *.app
 /Debug/
+bin/*
 
 # Vim
 *.swp

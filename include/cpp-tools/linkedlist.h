@@ -9,28 +9,27 @@
 // Includes
 #include <iostream>
 #include <string>
+
 using namespace std;
 
 template <class T>
-struct Node
-{
-    T val;
-    Node<T>* next;
+struct Node {
+  T value;
+  Node<T>* next;
 };
 
 template <class T>
-class LinkedList
-{
+class LinkedList {
   private:
-    Node* head;
+    Node<T>* head; // Pop() would return.
     int list_length;
 
   public:
     // Default constructor - creates head node
     LinkedList();
 
-    // Insert node function
-    bool insert_node(int val, int index);
+    T Pop();
+    void Push(T value);
 };
 
 #endif //CPPTOOLS_LINKEDLIST_H
