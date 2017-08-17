@@ -1,7 +1,3 @@
-# $@ - target
-# $^ dependencies
-# $< first dependency
-#
 CC := g++ # This is the main compiler
 # CC := clang --analyze # and comment out the linker last line for sanity
 SRCDIR := src
@@ -18,6 +14,10 @@ CFLAGS := -g # -Wall
 LIB := -pthread -L lib -lboost_thread-mt -lboost_filesystem-mt -lboost_system-mt
 INC_DIRS := $(shell find . -type d -name include)
 INC := -I $(INC_DIRS)
+
+# $@ - target
+# $^ dependencies
+# $< first dependency
 
 test:
 	@echo 'SOURCES: "$(SOURCES)"'
