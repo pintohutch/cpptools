@@ -9,29 +9,27 @@
 // Includes
 #include <iostream>
 #include <string>
+
 using namespace std;
 
-struct Node
-{
-    string song;
-    string artist;
-    int play_count;
-    Node* next;
+template <class T>
+struct Node {
+  T value;
+  Node<T>* next;
 };
 
-
-class LinkedList
-{
-private:
-    Node* head;
+template <class T>
+class LinkedList {
+  private:
+    Node<T>* head; // Pop() would return.
     int list_length;
 
-public:
+  public:
     // Default constructor - creates head node
     LinkedList();
 
-    // Insert node function
-    bool insert_node(Node* new_node, int index);
+    T Pop();
+    void Push(T value);
 };
 
 #endif //CPPTOOLS_LINKEDLIST_H
