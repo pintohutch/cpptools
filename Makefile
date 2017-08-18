@@ -10,7 +10,8 @@ TARGET := $(BINDIR)/runner
 # Googletest build variables.
 GTEST_DIR := vendor/googletest/googletest
 GTEST_INC := -I $(GTEST_DIR) -I $(GTEST_DIR)/include
-GTEST_BUILD_OBJ := $(BUILDDIR)/gtest-all.o
+GTEST_ALL_OBJ:= $(BUILDDIR)/gtest-all.o
+GTEST_MAIN_OBJ := $(BUILDDIR)/gtest_main.o
 GTEST_BUILD_LIB := $(LIBDIR)/libgtest.a
 
 # Compiler variables.
@@ -43,12 +44,16 @@ clean:
 	$(RM) -r $(BUILDDIR) $(TARGET)
 
 # Tests
-$(GTEST_BUILD_OBJ): $(GTEST_DIR)/src/gtest-all.cc
+$(GTEST_ALL_OBJ): $(GTEST_DIR)/src/gtest-all.cc
 	@echo "Building googletest..."
 	@mkdir -p `dirname $@`
 	$(CC) $(INC) $(GTEST_INC) -c -o $@ $<
 
-$(GTEST_BUILD_LIB): $(GTEST_BUILD_OBJ)
+$(GTEST_MAIN_OBJ): $(GTEST_DIR)/src/gtest_main.cc
+	@mkdir -p `dirname $@`
+	$(CC) $(INC) $(GTEST_INC) -c -o $@ $<
+
+$(GTEST_BUILD_LIB): $(GTEST_ALL_OBJ) $(GTEST_MAIN_OBJ)
 	ar -rv $@ $^
 
 $(BINDIR)/test_all: $(TESTS) $(GTEST_BUILD_LIB)
