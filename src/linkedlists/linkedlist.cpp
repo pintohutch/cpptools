@@ -1,10 +1,6 @@
-// linkedlist.cpp
-//
-// Author: Daniel Clark
+// linkedlist.cpp provides the linkedlist implementation.
 
 // Headers
-#include <iostream>
-
 #include "cpp-tools/linkedlist.h"
 
 using namespace std;
@@ -36,4 +32,10 @@ void LinkedList<T>::Push(T value) {
   } else {
     head = new_head;
   }
+  list_length++;
+}
+
+template <class T>
+int LinkedList<T>::Size() {
+  return list_length;
 }

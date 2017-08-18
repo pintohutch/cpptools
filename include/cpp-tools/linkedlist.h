@@ -30,6 +30,7 @@ class LinkedList {
 
     T Pop();
     void Push(T value);
+    int Size();
 };
 
 #endif //CPPTOOLS_LINKEDLIST_H
