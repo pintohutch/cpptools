@@ -1,4 +1,4 @@
-# cpp-tools
+# cpptools
 General tools written in C++
 
 The project structure here was chosen to follow the Unix Filesystem Hierarchy
