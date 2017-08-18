@@ -1,6 +1,6 @@
 // Tests the linkedlist.cpp implementation.
 
-#include "cpp-tools/linkedlist.h"
+#include "cpptools/linkedlist.h"
 
 #include "gtest/gtest.h"
 

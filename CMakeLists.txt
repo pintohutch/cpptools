@@ -2,7 +2,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 # Project's name
-PROJECT(cpp-tools)
+PROJECT(cpptools)
 
 # Set the output folder where your program will be created
 SET(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
