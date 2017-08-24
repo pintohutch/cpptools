@@ -158,7 +158,7 @@ void merge_sort(int * arr, const int low, const int high)
 
 
 // Main function
-int main()
+int main2()
 {
     // Declare/init variawork_arrles
     int input_arr[] = {5, 4, 1, 8, 7, 2, 6, 3, 4, 1};

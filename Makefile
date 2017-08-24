@@ -47,7 +47,7 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 $(BUILDDIR)/%.o: $(TESTDIR)/%.$(SRCEXT) $(GTEST_BUILD_LIB)
 	@echo "\nBuilding individual test object files..."
 	@mkdir -p `dirname $@`
-	$(CC) $(CFLAGS) $(INC) $(GTEST_INC) $(LIB) -c -o $@ $<
+	$(CC) $(CFLAGS) $(INC) $(GTEST_INC) -c -o $@ $<
 
 clean:
 	@echo "\nCleaning...\n";
@@ -69,7 +69,7 @@ $(GTEST_BUILD_LIB): $(GTEST_ALL_OBJ) $(GTEST_MAIN_OBJ)
 
 $(BINDIR)/test_all: $(GTEST_BUILD_LIB) $(OBJECTS) $(TEST_OBJECTS)
 	@echo "\nBuilding test_all target...\n"
-	$(CC) $(INC) $(GTEST_INC) $(LIB) -o $@ $(TESTDIR)/test_all.cpp $(OBJECTS) $(TEST_OBJECTS)
+	$(CC) $(INC) $(GTEST_INC) -o $@ $(TESTDIR)/test_all.cpp $(OBJECTS) $(TEST_OBJECTS) $(GTEST_BUILD_LIB)
 
 # Phony target ensures clean target will always run regardless if there's a
 # file named clean in the directory or not.
