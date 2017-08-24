@@ -4,6 +4,17 @@
 
 #include "gtest/gtest.h"
 
-TEST(LinkedList, DefaultConstructor) {
-  EXPECT_EQ(0, 0);
+class LinkedListTest : public ::testing::Test {
+  protected:
+    virtual void SetUp() {
+    }
+
+    virtual void TearDown() {
+    }
+
+    LinkedList<int> ll_int;
+};
+
+TEST_F(LinkedListTest,DefaultConstructor) {
+  EXPECT_EQ(ll_int.Size(), 0);
 }
