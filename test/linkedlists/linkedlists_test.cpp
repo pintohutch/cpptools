@@ -16,5 +16,5 @@ class LinkedListTest : public ::testing::Test {
 };
 
 TEST_F(LinkedListTest,DefaultConstructor) {
-    EXPECT_EQ(2,2);
+    EXPECT_EQ(0, 0);
 }

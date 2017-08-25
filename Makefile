@@ -5,14 +5,13 @@ LIBDIR := lib
 BUILDDIR := build
 BINDIR := bin
 TESTDIR := test
-TARGET := $(BINDIR)/runner
 
 # Googletest build variables.
 GTEST_DIR := vendor/googletest/googletest
 GTEST_INC := -I $(GTEST_DIR) -I $(GTEST_DIR)/include
 GTEST_ALL_OBJ:= $(BUILDDIR)/gtest-all.o
-GTEST_MAIN_OBJ := $(BUILDDIR)/gtest_main.o
-GTEST_BUILD_LIB := $(LIBDIR)/libgtest.a
+GTEST_LIB_NAME := gtest
+GTEST_BUILD_LIB := $(LIBDIR)/lib$(GTEST_LIB_NAME).a
 
 # Compiler variables.
 CC := g++ # This is the main compiler
@@ -26,8 +25,7 @@ OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 TEST_OBJECTS := $(patsubst $(TESTDIR)/%,$(BUILDDIR)/%,$(TESTS:.$(SRCEXT)=.o))
 TEST_OBJECTS := $(subst $(BUILDDIR)/test_all.o,,${TEST_OBJECTS})
 
-CFLAGS := -g # -Wall
-# -pthread - enable multithreading.
+CFLAGS := -g -Wall
 LIB := -pthread -L $(LIBDIR)
 INC := -I $(INCDIR)
 
@@ -35,9 +33,14 @@ INC := -I $(INCDIR)
 # $^ dependencies
 # $< first dependency
 
-$(TARGET): $(OBJECTS)
-	@echo " Linking..."
-	$(CC) $(LIB) -o $(TARGET) $^
+clean:
+	@echo "\nCleaning..."
+	@echo "-------------"
+	$(RM) -r $(BUILDDIR) $(TARGET)
+
+# Phony target ensures clean target will always run regardless if there's a
+# file named clean in the directory or not.
+.PHONY: clean
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@echo "\nBuilding individual src object files..."
@@ -49,28 +52,17 @@ $(BUILDDIR)/%.o: $(TESTDIR)/%.$(SRCEXT) $(GTEST_BUILD_LIB)
 	@mkdir -p `dirname $@`
 	$(CC) $(CFLAGS) $(INC) $(GTEST_INC) -c -o $@ $<
 
-clean:
-	@echo "\nCleaning...\n";
-	$(RM) -r $(BUILDDIR) $(TARGET)
-
 # Tests
 $(GTEST_ALL_OBJ): $(GTEST_DIR)/src/gtest-all.cc
 	@echo "\nBuilding googletest object files..."
 	@mkdir -p `dirname $@`
 	$(CC) $(INC) $(GTEST_INC) -c -o $@ $<
 
-$(GTEST_MAIN_OBJ): $(GTEST_DIR)/src/gtest_main.cc
-	@mkdir -p `dirname $@`
-	$(CC) $(INC) $(GTEST_INC) -c -o $@ $<
-
-$(GTEST_BUILD_LIB): $(GTEST_ALL_OBJ) $(GTEST_MAIN_OBJ)
+$(GTEST_BUILD_LIB): $(GTEST_ALL_OBJ)
 	@echo "\nArchiving googletest object files to lib..."
 	ar -rv $@ $^
 
 $(BINDIR)/test_all: $(GTEST_BUILD_LIB) $(OBJECTS) $(TEST_OBJECTS)
-	@echo "\nBuilding test_all target...\n"
-	$(CC) $(INC) $(GTEST_INC) -o $@ $(TESTDIR)/test_all.cpp $(OBJECTS) $(TEST_OBJECTS) $(GTEST_BUILD_LIB)
-
-# Phony target ensures clean target will always run regardless if there's a
-# file named clean in the directory or not.
-.PHONY: clean
+	@echo "\nBuilding test_all target..."
+	@echo "-----------------------------"
+	$(CC) $(INC) $(GTEST_INC) $(LIB) -l$(GTEST_LIB_NAME) -o $@ $(TESTDIR)/test_all.cpp $(OBJECTS) $(TEST_OBJECTS)
