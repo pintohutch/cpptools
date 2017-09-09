@@ -12,7 +12,7 @@ class LinkedListTest : public ::testing::Test {
     virtual void TearDown() {
     }
 
-    //LinkedList<int> ll_int;
+    cpptools::LinkedList<int> ll_int();
 };
 
 TEST_F(LinkedListTest,DefaultConstructor) {

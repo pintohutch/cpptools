@@ -15,7 +15,7 @@ GTEST_BUILD_LIB := $(LIBDIR)/lib$(GTEST_LIB_NAME).a
 
 # Compiler variables.
 CC := g++ # This is the main compiler
-SRCEXT := cpp
+SRCEXT := cc
 # Find all source code cpp files.
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 TESTS := $(shell find $(TESTDIR) -type f -name *.$(SRCEXT))
@@ -47,12 +47,12 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p `dirname $@`
 	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
+# Tests
 $(BUILDDIR)/%.o: $(TESTDIR)/%.$(SRCEXT) $(GTEST_BUILD_LIB)
 	@echo "\nBuilding individual test object files..."
 	@mkdir -p `dirname $@`
 	$(CC) $(CFLAGS) $(INC) $(GTEST_INC) -c -o $@ $<
 
-# Tests
 $(GTEST_ALL_OBJ): $(GTEST_DIR)/src/gtest-all.cc
 	@echo "\nBuilding googletest object files..."
 	@mkdir -p `dirname $@`
@@ -65,4 +65,4 @@ $(GTEST_BUILD_LIB): $(GTEST_ALL_OBJ)
 $(BINDIR)/test_all: $(GTEST_BUILD_LIB) $(OBJECTS) $(TEST_OBJECTS)
 	@echo "\nBuilding test_all target..."
 	@echo "-----------------------------"
-	$(CC) $(INC) $(GTEST_INC) $(LIB) -l$(GTEST_LIB_NAME) -o $@ $(TESTDIR)/test_all.cpp $(OBJECTS) $(TEST_OBJECTS)
+	$(CC) $(INC) $(GTEST_INC) $(LIB) -l$(GTEST_LIB_NAME) -o $@ $(TESTDIR)/test_all.$(SRCEXT) $(OBJECTS) $(TEST_OBJECTS)

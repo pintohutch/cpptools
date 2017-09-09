@@ -6,12 +6,7 @@
 #ifndef CPPTOOLS_LINKEDLIST_H_
 #define CPPTOOLS_LINKEDLIST_H_
 
-// Includes
-#include <iostream>
-#include <string>
-
-using namespace std;
-
+namespace cpptools{
 template <class T>
 struct Node {
   T value;
@@ -21,8 +16,8 @@ struct Node {
 template <class T>
 class LinkedList {
   private:
-    Node<T>* head; // Pop() would return.
-    int list_length;
+    Node<T>* head_; // Pop() would return.
+    int size_;
 
   public:
     // Default constructor - creates head node
@@ -32,5 +27,6 @@ class LinkedList {
     void Push(T value);
     int Size();
 };
+}
 
 #endif //CPPTOOLS_LINKEDLIST_H

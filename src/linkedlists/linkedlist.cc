@@ -1,22 +1,22 @@
 // linkedlist.cpp provides the linkedlist implementation.
 
 // Headers
+#include <stddef.h>
 #include "cpptools/linkedlist.h"
 
-using namespace std;
-
+namespace cpptools {
 template <class T>
 LinkedList<T>::LinkedList() {
-  head = NULL;
-  list_length = 0;
+  head_ = NULL;
+  size_ = 0;
 }
 
 template <class T>
 T LinkedList<T>::Pop() {
-  if (head != NULL) {
-    Node<T>* new_head = head->next;
-    list_length--;
-    return head->value;
+  if (head_ != NULL) {
+    Node<T>* new_head = head_->next;
+    size_--;
+    return head_->value;
   } else {
     throw "Cannot pop an empty list!";
   }
@@ -27,15 +27,16 @@ void LinkedList<T>::Push(T value) {
   Node<T>* new_head;
   new_head->value = value;
 
-  if (head != NULL) {
-    head->next = new_head;
+  if (head_ != NULL) {
+    head_->next = new_head;
   } else {
-    head = new_head;
+    head_ = new_head;
   }
-  list_length++;
+  size_++;
 }
 
 template <class T>
 int LinkedList<T>::Size() {
-  return list_length;
+  return size_;
+}
 }
