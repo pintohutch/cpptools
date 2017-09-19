@@ -29,25 +29,37 @@ CFLAGS := -g -Wall
 LIB := -pthread -L $(LIBDIR)
 INC := -I $(INCDIR)
 
+HLINES := "----------------"
+
 # $@ - target
 # $^ dependencies
 # $< first dependency
 
-clean:
-	@echo "\nCleaning..."
-	@echo "-------------"
-	$(RM) -r $(BUILDDIR) $(TARGET)
-
 # Phony target ensures clean target will always run regardless if there's a
 # file named clean in the directory or not.
-.PHONY: clean
+.PHONY: all clean test
 
+all: $(OBJECTS)
+	@echo "\nBuilding all..."
+	@echo $(HLINES)
+
+clean:
+	@echo "\nCleaning..."
+	@echo $(HLINES)
+	$(RM) -r $(BUILDDIR) $(TARGET)
+
+# Source objects
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@echo "\nBuilding individual src object files..."
 	@mkdir -p `dirname $@`
 	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 # Tests
+test: $(BINDIR)/test_all
+	@echo "\nRunning all tests: $<"
+	@echo $(HLINES)
+	$<
+
 $(BUILDDIR)/%.o: $(TESTDIR)/%.$(SRCEXT) $(GTEST_BUILD_LIB)
 	@echo "\nBuilding individual test object files..."
 	@mkdir -p `dirname $@`
@@ -64,5 +76,5 @@ $(GTEST_BUILD_LIB): $(GTEST_ALL_OBJ)
 
 $(BINDIR)/test_all: $(GTEST_BUILD_LIB) $(OBJECTS) $(TEST_OBJECTS)
 	@echo "\nBuilding test_all target..."
-	@echo "-----------------------------"
 	$(CC) $(INC) $(GTEST_INC) $(LIB) -l$(GTEST_LIB_NAME) -o $@ $(TESTDIR)/test_all.$(SRCEXT) $(OBJECTS) $(TEST_OBJECTS)
+
