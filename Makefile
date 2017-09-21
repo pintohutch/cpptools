@@ -1,4 +1,4 @@
-# Source build variables.
+# Source build variables
 SRCDIR := src
 INCDIR := include
 LIBDIR := lib
@@ -6,24 +6,35 @@ BUILDDIR := build
 BINDIR := bin
 TESTDIR := test
 
-# Googletest build variables.
+# Googletest build variables
 GTEST_DIR := vendor/googletest/googletest
 GTEST_INC := -I $(GTEST_DIR) -I $(GTEST_DIR)/include
 GTEST_ALL_OBJ:= $(BUILDDIR)/gtest-all.o
 GTEST_LIB_NAME := gtest
 GTEST_BUILD_LIB := $(LIBDIR)/lib$(GTEST_LIB_NAME).a
 
-# Compiler variables.
+# Compiler variables
 CC := g++ # This is the main compiler
 SRCEXT := cc
+
+# Executables
+MAIN_BIN := $(BINDIR)/main
+MAIN_SRC := $(subst $(BINDIR)/,$(SRCDIR)/,$(MAIN_BIN)).$(SRCEXT)
+MAIN_OBJ := $(subst $(BINDIR)/,$(BUILDDIR)/,$(MAIN_BIN)).o
+TEST_ALL_BIN := $(BINDIR)/test_all
+TEST_ALL_SRC := $(subst $(BINDIR)/,$(TESTDIR)/,$(TEST_ALL_BIN)).$(SRCEXT)
+TEST_ALL_OBJ := $(subst $(BINDIR)/,$(BUILDDIR)/,$(TEST_ALL_BIN)).o
+
 # Find all source code cpp files.
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 TESTS := $(shell find $(TESTDIR) -type f -name *.$(SRCEXT))
 
-# Replace src/../filename.cpp with build/../filename.o
+# Replace src/../filename.cpp with build/../filename.o.
+# And omit the executable objects.
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+OBJECTS := $(subst $(MAIN_OBJ),,${OBJECTS})
 TEST_OBJECTS := $(patsubst $(TESTDIR)/%,$(BUILDDIR)/%,$(TESTS:.$(SRCEXT)=.o))
-TEST_OBJECTS := $(subst $(BUILDDIR)/test_all.o,,${TEST_OBJECTS})
+TEST_OBJECTS := $(subst $(TEST_ALL_OBJ),,${TEST_OBJECTS})
 
 CFLAGS := -g -Wall
 LIB := -pthread -L $(LIBDIR)
@@ -39,9 +50,14 @@ HLINES := "----------------"
 # file named clean in the directory or not.
 .PHONY: all clean test
 
-all: $(OBJECTS)
+all: $(MAIN_BIN)
 	@echo "\nBuilding all..."
 	@echo $(HLINES)
+	$<
+
+$(MAIN_BIN): $(MAIN_SRC) $(OBJECTS)
+	@echo "\nBuilding main target..."
+	$(CC) $(INC) $(LIB) -o $@ $(MAIN_SRC) $(OBJECTS)
 
 clean:
 	@echo "\nCleaning..."
@@ -52,10 +68,10 @@ clean:
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@echo "\nBuilding individual src object files..."
 	@mkdir -p `dirname $@`
-	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
+	$(CC) $(CFLAGS) $(INC) -c -o $@ $^
 
 # Tests
-test: $(BINDIR)/test_all
+test: $(TEST_ALL_BIN)
 	@echo "\nRunning all tests: $<"
 	@echo $(HLINES)
 	$<
@@ -74,7 +90,8 @@ $(GTEST_BUILD_LIB): $(GTEST_ALL_OBJ)
 	@echo "\nArchiving googletest object files to lib..."
 	ar -rv $@ $^
 
-$(BINDIR)/test_all: $(GTEST_BUILD_LIB) $(OBJECTS) $(TEST_OBJECTS)
+$(TEST_ALL_BIN): $(GTEST_BUILD_LIB) $(TEST_ALL_SRC) $(OBJECTS) $(TEST_OBJECTS)
 	@echo "\nBuilding test_all target..."
-	$(CC) $(INC) $(GTEST_INC) $(LIB) -l$(GTEST_LIB_NAME) -o $@ $(TESTDIR)/test_all.$(SRCEXT) $(OBJECTS) $(TEST_OBJECTS)
+	$(CC) $(INC) $(GTEST_INC) $(LIB) -l$(GTEST_LIB_NAME) -o $@ \
+		$(TEST_ALL_SRC) $(OBJECTS) $(TEST_OBJECTS)
 

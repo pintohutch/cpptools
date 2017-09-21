@@ -6,7 +6,7 @@
 #ifndef CPPTOOLS_LINKEDLIST_H_
 #define CPPTOOLS_LINKEDLIST_H_
 
-namespace cpptools{
+namespace cpptools {
 template <class T>
 struct Node {
   T value;
