@@ -54,6 +54,7 @@ void LinkedList<T>::Push(T value) {
   new_head->value = value;
   new_head->next = head_;
   head_ = new_head;
+  delete new_head;
   size_++;
 }
 
