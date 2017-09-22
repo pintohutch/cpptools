@@ -12,9 +12,9 @@ class LinkedListTest : public ::testing::Test {
     virtual void TearDown() {
     }
 
-    //cpptools::LinkedList<int> ll_int;
+    cpptools::LinkedList<int> ll_;
 };
 
 TEST_F(LinkedListTest,DefaultConstructor) {
-    EXPECT_EQ(0, 0);
+    EXPECT_EQ(ll_.Size(), 0);
 }

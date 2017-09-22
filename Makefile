@@ -40,7 +40,7 @@ CFLAGS := -g -Wall
 LIB := -pthread -L $(LIBDIR)
 INC := -I $(INCDIR)
 
-HLINES := "----------------"
+HLINES := "--------------------------------"
 
 # $@ - target
 # $^ dependencies
@@ -50,10 +50,12 @@ HLINES := "----------------"
 # file named clean in the directory or not.
 .PHONY: all clean test
 
-all: $(MAIN_BIN)
+all: $(MAIN_BIN) $(TEST_ALL_BIN)
 	@echo "\nBuilding all..."
 	@echo $(HLINES)
-	$<
+	@echo "\nRunning all tests: $<"
+	@echo $(HLINES)
+	$(word 2,$^)
 
 $(MAIN_BIN): $(MAIN_SRC) $(OBJECTS)
 	@echo "\nBuilding main target..."

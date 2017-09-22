@@ -1,7 +1,10 @@
-#include "cpptools/linkedlist.h"
-// Bug explanation: https://www.codeproject.com/Articles/48575/How-to-define-a-template-class-in-a-h-file-and-imp
-int main() {
+// main.cc
+//
+// Author: Daniel Clark
 
-    cpptools::LinkedList l;
-  return 0;
+#include "cpptools/linkedlist.h"
+
+int main() {
+  cpptools::LinkedList<int> l;
+  return l.Size();
 }
