@@ -7,13 +7,9 @@
 #define CPPTOOLS_LINKEDLIST_H_
 
 #include <stddef.h>
+#include <iostream>
 
 namespace cpptools {
-template <typename T>
-struct Node {
-  T value;
-  Node<T>* next;
-};
 
 template <typename T>
 class LinkedList {
@@ -26,7 +22,12 @@ class LinkedList {
     int Size();
 
   private:
-    Node<T>* head_;
+    struct Node {
+      T value;
+      Node* next;
+      Node(const T& val, Node* nextNode) : value(val), next(nextNode) {}
+    };
+    Node* head_;
     int size_;
 };
 
@@ -39,8 +40,10 @@ LinkedList<T>::LinkedList() {
 template <typename T>
 T LinkedList<T>::Pop() {
   if (head_ != NULL) {
-    T val = head_->value;
+    Node* new_head = head_;
     head_ = head_->next;
+    T val = new_head->value;
+    delete new_head;
     size_--;
     return val;
   } else {
@@ -50,11 +53,7 @@ T LinkedList<T>::Pop() {
 
 template <typename T>
 void LinkedList<T>::Push(T value) {
-  Node<T>* new_head = new Node<T>;//{T, head_};
-  new_head->value = value;
-  new_head->next = head_;
-  head_ = new_head;
-  delete new_head;
+  head_ = new Node(value, head_);
   size_++;
 }
 

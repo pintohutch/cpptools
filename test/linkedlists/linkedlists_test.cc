@@ -25,6 +25,5 @@ TEST_F(LinkedListTest, PushPopSize) {
   EXPECT_EQ(ll_.Size(), 2);
   EXPECT_EQ(ll_.Pop(), 3);
   EXPECT_EQ(ll_.Pop(), 1);
-  EXPECT_EQ(ll_.Pop(), 1);
   EXPECT_EQ(ll_.Size(), 0);
 }
