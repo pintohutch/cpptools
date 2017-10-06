@@ -16,6 +16,8 @@ class LinkedList {
   public:
     // Default constructor - creates head node
     LinkedList();
+    // Destructor
+    ~LinkedList();
 
     T Pop();
     void Push(T value);
@@ -32,9 +34,14 @@ class LinkedList {
 };
 
 template <typename T>
-LinkedList<T>::LinkedList() {
-  head_ = NULL;
-  size_ = 0;
+LinkedList<T>::LinkedList()
+    : head_(NULL), size_(0) {}
+
+template <typename T>
+LinkedList<T>::~LinkedList() {
+  while (head_) {
+    Pop();
+  }
 }
 
 template <typename T>
@@ -43,6 +50,7 @@ T LinkedList<T>::Pop() {
     Node* new_head = head_;
     head_ = head_->next;
     T val = new_head->value;
+
     delete new_head;
     size_--;
     return val;
