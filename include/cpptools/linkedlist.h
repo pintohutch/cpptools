@@ -59,6 +59,7 @@ LinkedList<T>::~LinkedList() {
 /**
  * Method to to return the current head of the list while also removing
  * its reference from the structure.
+ * @return the value of type T at list's current head.
  */
 template <typename T>
 T LinkedList<T>::Pop() {
