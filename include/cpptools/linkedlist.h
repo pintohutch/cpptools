@@ -22,12 +22,14 @@ class LinkedList {
   public:
     // Default constructor - creates head node
     LinkedList();
+    // One-parameter constructor.
+    LinkedList(T value);
     // Destructor
     ~LinkedList();
 
     T Pop();
     void Push(T value);
-    int Size();
+    int Size() const;
 
   private:
     struct Node {
@@ -83,7 +85,7 @@ void LinkedList<T>::Push(T value) {
 }
 
 template <typename T>
-int LinkedList<T>::Size() {
+int LinkedList<T>::Size() const {
   return size_;
 }
 }
