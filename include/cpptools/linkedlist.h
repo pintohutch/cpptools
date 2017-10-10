@@ -1,6 +1,8 @@
-// linkedlist.h
-//
-// Author: Daniel Clark
+/** \file linkedlist.h
+ * Basic linked list class template and methods.
+ *
+ * Author: Daniel Clark
+ */
 
 // Define guard
 #ifndef CPPTOOLS_LINKEDLIST_H_
@@ -11,6 +13,10 @@
 
 namespace cpptools {
 
+/**
+ * An implementation of a doubly linked list using templates to handle
+ * generic data types.
+ */
 template <typename T>
 class LinkedList {
   public:
@@ -33,10 +39,16 @@ class LinkedList {
     int size_;
 };
 
+/**
+ * Default constructor with no arguments.
+ */
 template <typename T>
 LinkedList<T>::LinkedList()
     : head_(NULL), size_(0) {}
 
+/**
+ * Default destructor - uses Pop() method to clear up heap space.
+ */
 template <typename T>
 LinkedList<T>::~LinkedList() {
   while (head_) {
@@ -44,6 +56,10 @@ LinkedList<T>::~LinkedList() {
   }
 }
 
+/**
+ * Method to to return the current head of the list while also removing
+ * its reference from the structure.
+ */
 template <typename T>
 T LinkedList<T>::Pop() {
   if (head_ != NULL) {
