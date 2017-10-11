@@ -20,11 +20,9 @@ namespace cpptools {
 template <typename T>
 class LinkedList {
   public:
-    // Default constructor - creates head node
     LinkedList();
-    // One-parameter constructor.
-    LinkedList(T value);
-    // Destructor
+    // Explicit guards against implicit type conversions.
+    explicit LinkedList(T value);
     ~LinkedList();
 
     T Pop();
@@ -42,11 +40,20 @@ class LinkedList {
 };
 
 /**
- * Default constructor with no arguments.
+ * Constructor with no arguments.
  */
 template <typename T>
 LinkedList<T>::LinkedList()
-    : head_(NULL), size_(0) {}
+  : head_(NULL), size_(0) {}
+
+/**
+ * Single-argument constructor.
+ */
+template <typename T>
+LinkedList<T>::LinkedList(T val)
+  : head_(NULL), size_(0) {
+    Push(val);
+}
 
 /**
  * Default destructor - uses Pop() method to clear up heap space.
@@ -70,7 +77,6 @@ T LinkedList<T>::Pop() {
     head_ = head_->next;
     T val = new_head->value;
 
-    delete new_head;
     size_--;
     return val;
   } else {
@@ -78,12 +84,20 @@ T LinkedList<T>::Pop() {
   }
 }
 
+/**
+ * Method to push a new value on top of the current head of the linked
+ * list.
+ */
 template <typename T>
 void LinkedList<T>::Push(T value) {
   head_ = new Node(value, head_);
   size_++;
 }
 
+/**
+ * Method to return the number of nodes in the list.
+ * const keyword specifies accessor method - non-mutating.
+ */
 template <typename T>
 int LinkedList<T>::Size() const {
   return size_;
