@@ -1,0 +1,5 @@
+- C++ details section in guide
+- C++ rule of three/five
+- Finish linked list methods and tests
+- Do other data structures from pytools and JavaTools
+- Practice problem solving
