@@ -16,7 +16,7 @@ Standard [FHS](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html).
 # Convention and style
 The stylistic approach here is taken from the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html),
 while coding implementation and convention is take from the
-[C++ Core Guidelines](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines).
+[C++ Core Guidelines](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines). Also included here is the C++ linter from the [Google C++ style guide Github repo](https://github.com/google/styleguide/tree/gh-pages/cpplint) cpplint.py.
 
 # Build system
 This repository uses GNU make to compile source and tests. The make targets try

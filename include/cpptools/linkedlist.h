@@ -20,10 +20,21 @@ namespace cpptools {
 template <typename T>
 class LinkedList {
   public:
+    // Parameter-less constructor
     LinkedList();
     // Explicit guards against implicit type conversions.
     explicit LinkedList(T value);
+    // Big Five
+    // Destructor
     ~LinkedList();
+    // Copy constructor (lvalue const reference)
+    LinkedList(const LinkedList& rhs);
+    // Move constructor (rvalue reference)
+    LinkedList(LinkedList&& rhs);
+    // Copy assignment (lvalue const reference)
+    LinkedList& operator= (const LinkedList& rhs);
+    // Move assignment (rvalue reference)
+    LinkedList& operator= (LinkedList&& rhs);
 
     T Pop();
     void Push(T value);
