@@ -30,3 +30,11 @@ TEST_F(LinkedListTest, PushPopSize) {
   EXPECT_EQ(ll_.Pop(), 1);
   EXPECT_EQ(ll_.Size(), 1);
 }
+
+TEST_F(LinkedListTest, CopyConstructor) {
+  cpptools::LinkedList<int> ll2(ll_);
+  EXPECT_EQ(ll_.Size(), 1);
+  EXPECT_EQ(ll_.Pop(), 1);
+  EXPECT_EQ(ll_.Size(), 0);
+  EXPECT_EQ(ll2.Size(), 1);
+}

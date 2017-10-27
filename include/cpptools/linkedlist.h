@@ -25,16 +25,17 @@ class LinkedList {
     // Explicit guards against implicit type conversions.
     explicit LinkedList(T value);
     // Big Five
+    // Overwriting defaults is necessary when data types are pointers.
     // Destructor
     ~LinkedList();
     // Copy constructor (lvalue const reference)
     LinkedList(const LinkedList& rhs);
     // Move constructor (rvalue reference)
-    LinkedList(LinkedList&& rhs);
+    //LinkedList(LinkedList&& rhs);
     // Copy assignment (lvalue const reference)
-    LinkedList& operator= (const LinkedList& rhs);
+    //LinkedList& operator= (const LinkedList& rhs);
     // Move assignment (rvalue reference)
-    LinkedList& operator= (LinkedList&& rhs);
+    //LinkedList& operator= (LinkedList&& rhs);
 
     T Pop();
     void Push(T value);
@@ -44,7 +45,22 @@ class LinkedList {
     struct Node {
       T value;
       Node* next;
+      // Single-argument constructor
+      explicit Node(const T& val) : value(val), next(NULL) {}
+      // Constructor
       Node(const T& val, Node* nextNode) : value(val), next(nextNode) {}
+      // Destructor
+      ~Node() {
+        while (next != NULL ) {
+          Node* tmp = next->next;
+          delete next;
+          next = tmp;
+        }
+      }
+      // Copy contructor
+      Node(const Node& node) {
+        
+      }
     };
     Node* head_;
     int size_;
@@ -74,6 +90,15 @@ LinkedList<T>::~LinkedList() {
   while (head_) {
     Pop();
   }
+  delete head_;
+}
+
+/**
+ * Copy constructor
+ */
+template <typename T>
+LinkedList<T>::LinkedList(const LinkedList& rhs) {
+  head_ = new Node(rhs.head_->value, rhs.head_->next);
 }
 
 /**
