@@ -20,16 +20,26 @@ namespace cpptools {
 template <typename T>
 class LinkedList {
   public:
-    // Parameter-less constructor
-    LinkedList();
     // Explicit guards against implicit type conversions.
-    explicit LinkedList(T value);
+    // Also can take zero parameters due to default parameter.
+    explicit LinkedList(const T& value = T())
+      : head_(nullptr), size_(0) {
+      Push(value);
+    }
     // Big Five
     // Overwriting defaults is necessary when data types are pointers.
     // Destructor
     ~LinkedList();
     // Copy constructor (lvalue const reference)
-    LinkedList(const LinkedList& rhs);
+    LinkedList(const LinkedList& rhs) : size_(rhs.size_) {
+      // Invoke LinkedNode's copy constructor.
+      std::cout << rhs.head_->value_ << std::endl;
+      std::cout << rhs.head_->next_ << std::endl;
+      LinkedNode<T> copy = *rhs.head_;
+      std::cout << copy.value_ << std::endl;
+      std::cout << copy.next_ << std::endl;
+      //head_ = &copy; //problem child here.
+    }
     // Move constructor (rvalue reference)
     //LinkedList(LinkedList&& rhs);
     // Copy assignment (lvalue const reference)
@@ -47,22 +57,6 @@ class LinkedList {
 };
 
 /**
- * Constructor with no arguments.
- */
-template <typename T>
-LinkedList<T>::LinkedList()
-  : head_(NULL), size_(0) {}
-
-/**
- * Single-argument constructor.
- */
-template <typename T>
-LinkedList<T>::LinkedList(T value)
-  : head_(NULL), size_(0) {
-    Push(value);
-}
-
-/**
  * Default destructor - uses Pop() method to clear up heap space.
  */
 template <typename T>
@@ -73,16 +67,6 @@ LinkedList<T>::~LinkedList() {
   delete head_;
 }
 
-/**
- * Copy constructor
- */
-template <typename T>
-LinkedList<T>::LinkedList(const LinkedList& rhs) : size_(rhs.size_) {
-  std::cout << "got invoked";
-  // Invoke LinkedNode's copy constructor.
-  LinkedNode<T> copy = *rhs.head_;
-  head_ = &copy;
-}
 
 /**
  * Method to to return the current head of the list while also removing
