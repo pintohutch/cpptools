@@ -62,18 +62,17 @@ LinkedNode<T>::~LinkedNode() {
  * Copy constructor
  */
 template <typename T>
-LinkedNode<T>::LinkedNode(const LinkedNode& rhs) {
-  value_(rhs.value_);
+LinkedNode<T>::LinkedNode(const LinkedNode& rhs) : value_(rhs.value_) {
   if (rhs.next_ != nullptr) {
-    next_ = new LinkedNode(rhs.next_->value);
+    next_ = new LinkedNode(rhs.next_->value_);
     LinkedNode* walk = next_;
     LinkedNode* shadow = rhs.next_;
     // Walk forward through nexts and copy.
     while (shadow != nullptr) {
-      LinkedNode* tmp = new LinkedNode(shadow->value);
+      LinkedNode* tmp = new LinkedNode(shadow->value_);
       walk->next_ = tmp;
       walk = walk->next_;
-      shadow = shadow->next;
+      shadow = shadow->next_;
     }
   }
 }
@@ -82,8 +81,8 @@ LinkedNode<T>::LinkedNode(const LinkedNode& rhs) {
  * Move constructor
  */
 template <typename T>
-LinkedNode<T>::LinkedNode(LinkedNode&& rhs) {
-  value_(rhs.value_), next_(rhs.next_);
+LinkedNode<T>::LinkedNode(LinkedNode&& rhs) : value_(rhs.value_),
+    next_(rhs.next_) {
   rhs.next_ = nullptr;
 }
 

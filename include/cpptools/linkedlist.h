@@ -29,7 +29,7 @@ class LinkedList {
     // Destructor
     ~LinkedList();
     // Copy constructor (lvalue const reference)
-    //LinkedList(const LinkedList& rhs);
+    LinkedList(const LinkedList& rhs);
     // Move constructor (rvalue reference)
     //LinkedList(LinkedList&& rhs);
     // Copy assignment (lvalue const reference)
@@ -71,6 +71,17 @@ LinkedList<T>::~LinkedList() {
     Pop();
   }
   delete head_;
+}
+
+/**
+ * Copy constructor
+ */
+template <typename T>
+LinkedList<T>::LinkedList(const LinkedList& rhs) : size_(rhs.size_) {
+  std::cout << "got invoked";
+  // Invoke LinkedNode's copy constructor.
+  LinkedNode<T> copy = *rhs.head_;
+  head_ = &copy;
 }
 
 /**
