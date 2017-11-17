@@ -1,7 +1,7 @@
 /** \file linkedlist.h
  * Basic linked list class template and methods.
  *
- * Author: Daniel Clark
+ * Copyright 2017 Daniel Clark
  */
 
 // Define guard
@@ -9,7 +9,7 @@
 #define CPPTOOLS_LINKEDLIST_H_
 
 #include <stddef.h>
-#include <iostream>
+#include "linkednode.h"
 
 namespace cpptools {
 
@@ -29,7 +29,7 @@ class LinkedList {
     // Destructor
     ~LinkedList();
     // Copy constructor (lvalue const reference)
-    LinkedList(const LinkedList& rhs);
+    //LinkedList(const LinkedList& rhs);
     // Move constructor (rvalue reference)
     //LinkedList(LinkedList&& rhs);
     // Copy assignment (lvalue const reference)
@@ -42,27 +42,7 @@ class LinkedList {
     int Size() const;
 
   private:
-    struct Node {
-      T value;
-      Node* next;
-      // Single-argument constructor
-      explicit Node(const T& val) : value(val), next(NULL) {}
-      // Constructor
-      Node(const T& val, Node* nextNode) : value(val), next(nextNode) {}
-      // Destructor
-      ~Node() {
-        while (next != NULL ) {
-          Node* tmp = next->next;
-          delete next;
-          next = tmp;
-        }
-      }
-      // Copy contructor
-      Node(const Node& node) {
-        
-      }
-    };
-    Node* head_;
+    LinkedNode<T>* head_;
     int size_;
 };
 
@@ -77,9 +57,9 @@ LinkedList<T>::LinkedList()
  * Single-argument constructor.
  */
 template <typename T>
-LinkedList<T>::LinkedList(T val)
+LinkedList<T>::LinkedList(T value)
   : head_(NULL), size_(0) {
-    Push(val);
+    Push(value);
 }
 
 /**
@@ -94,14 +74,6 @@ LinkedList<T>::~LinkedList() {
 }
 
 /**
- * Copy constructor
- */
-template <typename T>
-LinkedList<T>::LinkedList(const LinkedList& rhs) {
-  head_ = new Node(rhs.head_->value, rhs.head_->next);
-}
-
-/**
  * Method to to return the current head of the list while also removing
  * its reference from the structure.
  * @return the value of type T at list's current head.
@@ -109,12 +81,12 @@ LinkedList<T>::LinkedList(const LinkedList& rhs) {
 template <typename T>
 T LinkedList<T>::Pop() {
   if (head_ != NULL) {
-    Node* new_head = head_;
-    head_ = head_->next;
-    T val = new_head->value;
+    LinkedNode<T>* new_head = head_;
+    head_ = head_->next_;
+    T value = new_head->value_;
 
     size_--;
-    return val;
+    return value;
   } else {
     throw "Cannot pop an empty list!";
   }
@@ -126,7 +98,9 @@ T LinkedList<T>::Pop() {
  */
 template <typename T>
 void LinkedList<T>::Push(T value) {
-  head_ = new Node(value, head_);
+  LinkedNode<T>* tmp = new LinkedNode<T>(value);
+  tmp->next_ = head_;
+  head_ = tmp;
   size_++;
 }
 
@@ -140,4 +114,4 @@ int LinkedList<T>::Size() const {
 }
 }
 
-#endif //CPPTOOLS_LINKEDLIST_H
+#endif //CPPTOOLS_LINKEDLIST_H_

@@ -36,7 +36,7 @@ OBJECTS := $(subst $(MAIN_OBJ),,${OBJECTS})
 TEST_OBJECTS := $(patsubst $(TESTDIR)/%,$(BUILDDIR)/%,$(TESTS:.$(SRCEXT)=.o))
 TEST_OBJECTS := $(subst $(TEST_ALL_OBJ),,${TEST_OBJECTS})
 
-CFLAGS := -g -Wall
+CFLAGS := -g -std=c++11
 LIB := -pthread -L $(LIBDIR)
 INC := -I $(INCDIR)
 
