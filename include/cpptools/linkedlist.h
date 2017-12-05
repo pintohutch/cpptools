@@ -9,7 +9,7 @@
 #define CPPTOOLS_LINKEDLIST_H_
 
 #include <stddef.h>
-#include "linkednode.h"
+#include <algorithm>
 
 namespace cpptools {
 
@@ -30,10 +30,9 @@ class LinkedList {
     }
     // Explicit guards against implicit type conversions.
     // Also can take zero parameters due to default parameter.
-    explicit LinkedList(const T& d = T()) {
-      init();
-      Push(value);
-    }
+    //explicit LinkedList(const T& d = T()) {
+    //  init();
+    //}
     // Big Five
     // Overwriting defaults is necessary when data types are pointers.
     // Destructor
@@ -41,8 +40,6 @@ class LinkedList {
     // Copy constructor (lvalue const reference)
     LinkedList(const LinkedList& rhs) : size_(rhs.size_) {
       // Invoke LinkedNode's copy constructor.
-      LinkedNode<T> copy = *rhs.head_;
-      head_ = &copy; //problem child here.
     }
     // Move constructor (rvalue reference)
     //LinkedList(LinkedList&& rhs);
@@ -71,17 +68,18 @@ class LinkedList {
     }
 
     struct Node {
-      T data;
-      Node* prev;
-      Node* next;
+        T data;
+        Node* prev;
+        Node* next;
 
-      // lvalue constructor.
-      Node(const T& d = T{}, Node* p = nullptr, Node* n = nullptr) :
-          data{d}, prev{p}, next{n} {}
-      // rvalue constructor.
-      Node(T&& d, Node* p = nullptr, Node* n = nullptr) :
-          data{ std::move(d) }, prev{p}, next{n} {}
-    }
+        // lvalue constructor.
+        Node(const T& d = T{}, Node* p = nullptr, Node* n = nullptr) :
+                data{d}, prev{p}, next{n} {}
+        // rvalue constructor.
+        Node(T&& d, Node* p = nullptr, Node* n = nullptr) :
+                data{ std::move(d) }, prev{p}, next{n} {}
+    };
+
     Node* head_;
     Node* tail_;
     int size_;
@@ -130,14 +128,6 @@ void LinkedList<T>::Push(T value) {
   size_++;
 }
 
-/**
- * Method to return the number of nodes in the list.
- * const keyword specifies accessor method - non-mutating.
- */
-template <typename T>
-int LinkedList<T>::Size() const {
-  return size_;
-}
 }
 
 #endif //CPPTOOLS_LINKEDLIST_H_
