@@ -15,15 +15,23 @@ namespace cpptools {
 
 /**
  * An implementation of a doubly linked list using templates to handle
- * generic data types.
+ * generic data types. This class also uses sentinel nodes as empty head
+ * and tail markers to remove special case handling in the methods.
+ *
+ * ||--|------|-->|---|-->|---|-->|------|
+ *     | head |   | a |   | b |   | tail |
+ *     |------|<--|---|<--|---|<--|------|--||
  */
 template <typename T>
 class LinkedList {
   public:
+    LinkedList() {
+      init();
+    }
     // Explicit guards against implicit type conversions.
     // Also can take zero parameters due to default parameter.
-    explicit LinkedList(const T& value = T())
-      : head_(nullptr), size_(0) {
+    explicit LinkedList(const T& d = T()) {
+      init();
       Push(value);
     }
     // Big Five
@@ -33,12 +41,8 @@ class LinkedList {
     // Copy constructor (lvalue const reference)
     LinkedList(const LinkedList& rhs) : size_(rhs.size_) {
       // Invoke LinkedNode's copy constructor.
-      std::cout << rhs.head_->value_ << std::endl;
-      std::cout << rhs.head_->next_ << std::endl;
       LinkedNode<T> copy = *rhs.head_;
-      std::cout << copy.value_ << std::endl;
-      std::cout << copy.next_ << std::endl;
-      //head_ = &copy; //problem child here.
+      head_ = &copy; //problem child here.
     }
     // Move constructor (rvalue reference)
     //LinkedList(LinkedList&& rhs);
@@ -47,12 +51,39 @@ class LinkedList {
     // Move assignment (rvalue reference)
     //LinkedList& operator= (LinkedList&& rhs);
 
-    T Pop();
-    void Push(T value);
-    int Size() const;
+    // const keyword specifies accessor method - non-mutating.
+    int size() const {
+      return size_;
+    }
+
+    // const keyword specifies accessor method - non-mutating.
+    bool empty() const {
+      return size() == 0;
+    }
 
   private:
-    LinkedNode<T>* head_;
+    void init() {
+      size_ = 0;
+      head_ = new Node;
+      tail_ = new Node;
+      head_->next = tail_;
+      tail_->prev = head_;
+    }
+
+    struct Node {
+      T data;
+      Node* prev;
+      Node* next;
+
+      // lvalue constructor.
+      Node(const T& d = T{}, Node* p = nullptr, Node* n = nullptr) :
+          data{d}, prev{p}, next{n} {}
+      // rvalue constructor.
+      Node(T&& d, Node* p = nullptr, Node* n = nullptr) :
+          data{ std::move(d) }, prev{p}, next{n} {}
+    }
+    Node* head_;
+    Node* tail_;
     int size_;
 };
 
