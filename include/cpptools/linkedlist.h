@@ -8,7 +8,7 @@
 #ifndef CPPTOOLS_LINKEDLIST_H_
 #define CPPTOOLS_LINKEDLIST_H_
 
-#include <stddef.h>
+#include <cstddef>
 #include <algorithm>
 
 namespace cpptools {
@@ -24,6 +24,57 @@ namespace cpptools {
  */
 template <typename T>
 class LinkedList {
+  // Internal classes
+  private:
+    struct Node {
+      T data;
+      Node* prev;
+      Node* next;
+
+      // lvalue constructor.
+      Node(const T& d = T{}, Node* p = nullptr, Node* n = nullptr) :
+          data{d}, prev{p}, next{n} {}
+      // rvalue constructor.
+      Node(T&& d, Node* p = nullptr, Node* n = nullptr) :
+          data{ std::move(d) }, prev{p}, next{n} {}
+  };
+
+  public:
+    class const_iterator {
+      public:
+        const_iterator() :
+          current_(nullptr) {};
+        const T& operator* () const {
+          return retrieve();
+        }
+        const_iterator& operator++ () {
+          current_ = current_->next;
+          return *this;
+        }
+        const_iterator& operator++ (int) {
+        }
+        bool operator== (const const_iterator& rhs) {
+        }
+        bool operator!= (const const_iterator& rhs) {
+        }
+
+      protected:
+        Node* current_;
+
+        T& retrieve() const {
+          return current_->data;
+        }
+
+        const_iterator(Node* p) :
+          current_(p) {
+        }
+    };
+
+    class iterator : const_iterator {
+
+    };
+
+
   public:
     LinkedList() {
       init();
@@ -58,6 +109,10 @@ class LinkedList {
       return size() == 0;
     }
 
+    iterator begin() {
+      return {head_->next};
+    }
+
   private:
     void init() {
       size_ = 0;
@@ -66,19 +121,6 @@ class LinkedList {
       head_->next = tail_;
       tail_->prev = head_;
     }
-
-    struct Node {
-        T data;
-        Node* prev;
-        Node* next;
-
-        // lvalue constructor.
-        Node(const T& d = T{}, Node* p = nullptr, Node* n = nullptr) :
-                data{d}, prev{p}, next{n} {}
-        // rvalue constructor.
-        Node(T&& d, Node* p = nullptr, Node* n = nullptr) :
-                data{ std::move(d) }, prev{p}, next{n} {}
-    };
 
     Node* head_;
     Node* tail_;

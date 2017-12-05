@@ -1,4 +1,4 @@
-// Tests the linkedlist.cpp implementation.
+// Tests the LinkedList implementation.
 
 #include "cpptools/linkedlist.h"
 
@@ -25,7 +25,7 @@ TEST_F(LinkedListTest, DefaultConstructor) {
 TEST_F(LinkedListTest, PushPopSize) {
   ll_.Push(1);
   ll_.Push(3);
-  EXPECT_EQ(ll_.Size(), 3);
+  EXPECT_EQ(ll_.size(), 3);
   EXPECT_EQ(ll_.Pop(), 3);
   EXPECT_EQ(ll_.Pop(), 1);
   EXPECT_EQ(ll_.Size(), 1);
