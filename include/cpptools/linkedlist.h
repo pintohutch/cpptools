@@ -154,16 +154,16 @@ class LinkedList {
 
     };
 
-
   public:
     LinkedList() {
       init();
     }
     // Explicit guards against implicit type conversions.
     // Also can take zero parameters due to default parameter.
-    //explicit LinkedList(const T& d = T()) {
-    //  init();
-    //}
+    explicit LinkedList(const T& d = T{}) {
+      init();
+      // push_back
+    }
     // Big Five
     // Overwriting defaults is necessary when data types are pointers.
     // Destructor
@@ -190,15 +190,56 @@ class LinkedList {
     }
 
     const_iterator begin() const {
+      // Use aggregate initializer to return type (inferred from method
+      // declaration). same as: return const_iterator{head_->next};
+      return {head_->next};
     }
 
     iterator begin() {
+      return {head_->next};
     }
 
     const_iterator end() const {
+      return {tail_};
     }
 
     iterator end() {
+      return {tail_};
+    }
+
+    // Inserts data as itr.current_'s previous node - lvalue data.
+    iterator insert(iterator& itr, const T& data) {
+      Node* p = itr.current_;
+      Node* i = new Node{data, p->prev, p};
+      p->prev->next = i;
+      p->prev = i;
+      size_++;
+      return {i};
+    }
+
+    // Inserts data as itr.current_'s previous node - lvalue data.
+    iterator insert(iterator& itr, T&& data) {
+      Node* p = itr.current_;
+      size_++;
+      // One-line version of the same logic.
+      return {p->prev = p->prev->next =
+        new Node{std::move(data), p->prev, p};};
+    }
+
+    // Insert a new node at the end of list (immediately preceding the tail
+    // sentinel node) - lvalue.
+    void push_back(const T& data) {
+      insert(end(), data);
+    }
+
+  // Insert a new node at the end of list (immediately preceding the tail
+  // sentinel node) - lvalue.
+  void push_back(const T& data) {
+    insert(end(), data);
+  }
+
+    void push_front(const T& data) {
+      insert(begin(), data);
     }
 
   private:
@@ -214,49 +255,6 @@ class LinkedList {
     Node* tail_;
     int size_;
 };
-
-/**
- * Default destructor - uses Pop() method to clear up heap space.
- */
-template <typename T>
-LinkedList<T>::~LinkedList() {
-  while (head_) {
-    Pop();
-  }
-  delete head_;
-}
-
-
-/**
- * Method to to return the current head of the list while also removing
- * its reference from the structure.
- * @return the value of type T at list's current head.
- */
-template <typename T>
-T LinkedList<T>::Pop() {
-  if (head_ != NULL) {
-    LinkedNode<T>* new_head = head_;
-    head_ = head_->next_;
-    T value = new_head->value_;
-
-    size_--;
-    return value;
-  } else {
-    throw "Cannot pop an empty list!";
-  }
-}
-
-/**
- * Method to push a new value on top of the current head of the linked
- * list.
- */
-template <typename T>
-void LinkedList<T>::Push(T value) {
-  LinkedNode<T>* tmp = new LinkedNode<T>(value);
-  tmp->next_ = head_;
-  head_ = tmp;
-  size_++;
-}
 
 }
 
