@@ -19,7 +19,7 @@ class LinkedListTest : public ::testing::Test {
 };
 
 TEST_F(LinkedListTest, DefaultConstructor) {
-  EXPECT_EQ(ll_.Size(), 1);
+  EXPECT_EQ(ll_.size(), 1);
 }
 
 TEST_F(LinkedListTest, PushPopSize) {
