@@ -1,5 +1,7 @@
 /** \file linkedlist.h
  * Basic linked list class template and methods.
+ * Implementation courtesy of "Data structures and algorithm analysis in C++",
+ * Fourth edition by Mark Allen Weiss.
  *
  * Copyright 2017 Daniel Clark
  */
@@ -72,6 +74,10 @@ class LinkedList {
         // this keyword is always a pointer to its own address.
         const_iterator& operator++ (int) {
           // Copy constructor returns the non-incremented version.
+          // NOTE: the default copy constructor is fine here. The reason being,
+          // that the pointer is copied (still pointing to the same object) in
+          // `old`, so when the ++(*this) occurs, `old.current_` is still
+          // pointing to the previous object, but *this is pointing to the next.
           const_iterator old = *this;
           // Increment underlying object, so when it's next accessed,
           // it's incremented.
@@ -158,11 +164,17 @@ class LinkedList {
     LinkedList() {
       init();
     }
-    // Explicit guards against implicit type conversions.
-    // Also can take zero parameters due to default parameter.
-    explicit LinkedList(const T& d = T{}) {
+    // Explicit guards against implicit type conversions - lvalue.
+    explicit LinkedList(const T& d) {
       init();
-      // push_back
+      // NOTE: since the list is empty, push_front or push_back works here.
+      push_front(d);
+    }
+    // Explicit guards against implicit type conversions - rvalue.
+    explicit LinkedList(T&& d) {
+      init();
+      // NOTE: since the list is empty, push_front or push_back works here.
+      push_front(d);
     }
     // Big Five
     // Overwriting defaults is necessary when data types are pointers.
@@ -226,20 +238,43 @@ class LinkedList {
         new Node{std::move(data), p->prev, p};};
     }
 
+    // erase removes the `current_` node and returns the iterator corresponding
+    // to the `next` node in the list.
+    iterator erase(iterator& itr) {
+      Node* p = itr.current_;
+      // Remove references to p.
+      p->prev->next = p->next;
+      p->next->prev = p->prev;
+
+      iterator ret = {p->next};
+      size_--;
+      delete p;
+
+      return ret;
+    }
+
     // Insert a new node at the end of list (immediately preceding the tail
     // sentinel node) - lvalue.
     void push_back(const T& data) {
       insert(end(), data);
     }
 
-  // Insert a new node at the end of list (immediately preceding the tail
-  // sentinel node) - lvalue.
-  void push_back(const T& data) {
-    insert(end(), data);
-  }
+    // Insert a new node at the end of list (immediately preceding the tail
+    // sentinel node) - rvalue.
+    void push_back(T&& data) {
+      insert(end(), std::move(data));
+    }
 
+    // Insert a new node at the front of list (immediately following the head
+    // sentinel node) - lvalue.
     void push_front(const T& data) {
       insert(begin(), data);
+    }
+
+    // Insert a new node at the front of list (immediately following the head
+    // sentinel node) - rvalue.
+    void push_front(T&& data) {
+      insert(begin(), std::move(data));
     }
 
   private:
