@@ -70,8 +70,9 @@ class LinkedList {
           current_ = current_->next;
           return *this;
         }
-        // Postfix increment (itr++) - int never used.
-        // this keyword is always a pointer to its own address.
+        // Postfix increment (itr++) - i.e. increment after use.
+        // Note: `int` arg is never used.
+        // `this` keyword is always a pointer to its own address.
         const_iterator& operator++ (int) {
           // Copy constructor returns the non-incremented version.
           // NOTE: the default copy constructor is fine here. The reason being,
@@ -131,7 +132,7 @@ class LinkedList {
           return const_iterator::operator*();
         }
 
-        // Prefix (++itr) incrementor implementation again because of the different
+        // Prefix (++itr) incrementer implementation again because of the different
         // return types (but does hide base class).
         // Derived classes of template base classes need to explicitly use
         // `this` to access member variables.
@@ -141,7 +142,7 @@ class LinkedList {
           return *this;
         }
 
-        // Postfix (itr++) incrementor implementation again because of the different
+        // Postfix (itr++) incrementer implementation again because of the different
         // return types (but does hide base class).
         iterator operator++ (int) {
           iterator old = *this;
@@ -179,7 +180,8 @@ class LinkedList {
     // Big Five
     // Overwriting defaults is necessary when data types are pointers.
     // Destructor
-    ~LinkedList();
+    ~LinkedList() {
+    }
     // Copy constructor (lvalue const reference)
     LinkedList(const LinkedList& rhs) : size_(rhs.size_) {
       // Invoke LinkedNode's copy constructor.
@@ -275,6 +277,16 @@ class LinkedList {
     // sentinel node) - rvalue.
     void push_front(T&& data) {
       insert(begin(), std::move(data));
+    }
+
+    // Remove the node at the front of the list (immediately following the head
+    // sentinel node).
+    void pop_front() {
+      erase(begin());
+    }
+
+    void pop_back() {
+      erase(end());
     }
 
   private:
