@@ -38,11 +38,11 @@ class LinkedList {
       Node* next;
 
       // lvalue constructor.
-      Node(const T& d = T{}, Node* p = nullptr, Node* n = nullptr) :
-          data{d}, prev{p}, next{n} {}
+      Node(const T& d = T(), Node* p = nullptr, Node* n = nullptr) :
+          data(d), prev(p), next(n) {}
       // rvalue constructor.
       Node(T&& d, Node* p = nullptr, Node* n = nullptr) :
-          data{ std::move(d) }, prev{p}, next{n} {}
+          data( std::move(d) ), prev(p), next(n) {}
   };
 
   public:
@@ -114,7 +114,7 @@ class LinkedList {
      * super-class, the const_iterator, but allows for mutability of the
      * underlying node.a way to track position
      */
-    class iterator : const_iterator {
+    class iterator : public const_iterator {
       public:
         iterator() {}
 
@@ -153,7 +153,7 @@ class LinkedList {
       protected:
         // Use base class initializer for constructor.
         explicit iterator(Node* p) :
-          const_iterator{p} {}
+          const_iterator(p) {}
 
         // Allow LinkedList member functions to access private and protected
         // members of iterator.
@@ -181,6 +181,9 @@ class LinkedList {
     // Overwriting defaults is necessary when data types are pointers.
     // Destructor
     ~LinkedList() {
+      clear();
+      delete head_;
+      delete tail_;
     }
     // Copy constructor (lvalue const reference)
     LinkedList(const LinkedList& rhs) : size_(rhs.size_) {
@@ -206,29 +209,29 @@ class LinkedList {
     const_iterator begin() const {
       // Use aggregate initializer to return type (inferred from method
       // declaration). same as: return const_iterator{head_->next};
-      return {head_->next};
+      return const_iterator(head_->next);
     }
 
     iterator begin() {
-      return {head_->next};
+      return iterator(head_->next);
     }
 
     const_iterator end() const {
-      return {tail_};
+      return const_iterator(tail_);
     }
 
     iterator end() {
-      return {tail_};
+      return iterator(tail_);
     }
 
     // Inserts data as itr.current_'s previous node - lvalue data.
     iterator insert(iterator& itr, const T& data) {
       Node* p = itr.current_;
-      Node* i = new Node{data, p->prev, p};
+      Node* i = new Node(data, p->prev, p);
       p->prev->next = i;
       p->prev = i;
       size_++;
-      return {i};
+      return iterator(i);
     }
 
     // Inserts data as itr.current_'s previous node - lvalue data.
@@ -236,8 +239,8 @@ class LinkedList {
       Node* p = itr.current_;
       size_++;
       // One-line version of the same logic.
-      return {p->prev = p->prev->next =
-        new Node{std::move(data), p->prev, p};};
+      return iterator(p->prev = p->prev->next =
+        new Node(std::move(data), p->prev, p));
     }
 
     // erase removes the `current_` node and returns the iterator corresponding
@@ -248,7 +251,7 @@ class LinkedList {
       p->prev->next = p->next;
       p->next->prev = p->prev;
 
-      iterator ret = {p->next};
+      iterator ret(p->next);
       size_--;
       delete p;
 
@@ -270,23 +273,28 @@ class LinkedList {
     // Insert a new node at the front of list (immediately following the head
     // sentinel node) - lvalue.
     void push_front(const T& data) {
-      insert(begin(), data);
+      iterator b = begin();
+      insert(b, data);
     }
 
     // Insert a new node at the front of list (immediately following the head
     // sentinel node) - rvalue.
     void push_front(T&& data) {
-      insert(begin(), std::move(data));
+      iterator b = begin();
+      insert(b, std::move(data));
     }
 
     // Remove the node at the front of the list (immediately following the head
     // sentinel node).
     void pop_front() {
-      erase(begin());
+      iterator b = begin();
+      erase(b);
     }
 
-    void pop_back() {
-      erase(end());
+    void clear() {
+      while (!empty()) {
+        pop_front();
+      }
     }
 
   private:
