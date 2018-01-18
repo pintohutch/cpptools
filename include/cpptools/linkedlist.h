@@ -38,11 +38,11 @@ class LinkedList {
       Node* next;
 
       // lvalue constructor.
-      Node(const T& d = T(), Node* p = nullptr, Node* n = nullptr) :
-          data(d), prev(p), next(n) {}
+      Node(const T& d = T{}, Node* p = nullptr, Node* n = nullptr) :
+          data{d}, prev{p}, next{n} {}
       // rvalue constructor.
       Node(T&& d, Node* p = nullptr, Node* n = nullptr) :
-          data( std::move(d) ), prev(p), next(n) {}
+          data{ std::move(d) }, prev{p}, next{n} {}
   };
 
   public:
@@ -104,7 +104,7 @@ class LinkedList {
         // Non-explicit constructor just to show we can init return types without
         // explicitly stating `return const_iterator(p)`, but just `return {p}`.
         const_iterator(Node* p) :
-          current_(p) {}
+          current_{p} {}
 
         // Allow LinkedList member functions to access private and protected
         // members of const_iterator.
@@ -155,7 +155,7 @@ class LinkedList {
       protected:
         // Use base class initializer for constructor.
         explicit iterator(Node* p) :
-          const_iterator(p) {}
+          const_iterator{p} {}
 
         // Allow LinkedList member functions to access private and protected
         // members of iterator.
@@ -235,7 +235,7 @@ class LinkedList {
     // Inserts data as itr.current_'s previous node - lvalue data.
     iterator insert(iterator itr, const T& data) {
       Node* p = itr.current_;
-      Node* i = new Node(data, p->prev, p);
+      Node* i = new Node{data, p->prev, p};
       p->prev->next = i;
       p->prev = i;
       size_++;
@@ -259,7 +259,7 @@ class LinkedList {
       p->prev->next = p->next;
       p->next->prev = p->prev;
 
-      iterator ret(p->next);
+      iterator ret{p->next};
       size_--;
       delete p;
 
