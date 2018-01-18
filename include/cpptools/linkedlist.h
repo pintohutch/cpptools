@@ -209,7 +209,7 @@ class LinkedList {
     const_iterator begin() const {
       // Use aggregate initializer to return type (inferred from method
       // declaration). same as: return const_iterator{head_->next};
-      return const_iterator(head_->next);
+      return {head_->next};
     }
 
     iterator begin() {
