@@ -41,6 +41,13 @@ class LinkedList {
       Node(const T& d = T{}, Node* p = nullptr, Node* n = nullptr) :
           data{d}, prev{p}, next{n} {}
       // rvalue constructor.
+      // NOTE: when a function uses ann rvalue reference argument, it has a name
+      // within the function, and is thus, treated as an lvalue. In this
+      // example, the `Node` constructor takes an rvalue reference as its first
+      // argument, and then stores that as an lvalue reference in variable `d`.
+      // see: https://thbecker.net/articles/rvalue_references/section_05.html
+      // This is why `std::move` is used - we want to cast that lvalue `d` into
+      // an rvalue to invoke T's move constructor to avoid a copy.
       Node(T&& d, Node* p = nullptr, Node* n = nullptr) :
           data{ std::move(d) }, prev{p}, next{n} {}
   };
@@ -164,23 +171,30 @@ class LinkedList {
     };
 
   public:
+    // Parameter-less constructor.
     LinkedList() {
       init();
     }
-    // Explicit guards against implicit type conversions - lvalue.
+    // Single-parameter constructor - lvalue.
+    // Explicit guards against implicit type conversions.
     explicit LinkedList(const T& d) {
       init();
-      // NOTE: since the list is empty, push_front or push_back works here.
+      // NOTE: since the list is empty, `push_front` or `push_back` works here.
       push_front(d);
     }
-    // Explicit guards against implicit type conversions - rvalue.
+    // Single-parameter constructor - rvalue.
+    // Explicit guards against implicit type conversions.
+    // TODO - how to invoke this in tests?
     explicit LinkedList(T&& d) {
       init();
       // NOTE: since the list is empty, push_front or push_back works here.
       push_front(d);
     }
-    // Big Five
-    // Overwriting defaults is necessary when data types are pointers.
+
+    // Big Five:
+    // --------
+    // NOTE: Overwriting defaults is necessary when data types are pointers.
+
     // Destructor
     ~LinkedList() {
       clear();
@@ -188,18 +202,50 @@ class LinkedList {
       delete tail_;
     }
     // Copy constructor (lvalue const reference)
-    LinkedList(const LinkedList& rhs) : size_(rhs.size_) {
+    // NOTE: invoked when lhs is previously undeclared and rhs is an lvalue.
+    LinkedList(const LinkedList& rhs) : size_{rhs.size_} {
       init();
       for (auto& x : rhs) {
         push_back(x);
       }
     }
     // Move constructor (rvalue reference)
-    //LinkedList(LinkedList&& rhs);
+    // NOTE: invoked when lhs is previously undeclared and rhs is an rvalue.
+    // NOTE: `noexcept` specifies function won't throw exceptions - move semantics
+    // won't be applied to types that can throw exceptions on moves.
+    // See: http://blogs.microsoft.co.il/sasha/2014/08/08/make-move-constructors-no-throw/
+    LinkedList(LinkedList&& rhs) noexcept :
+      size_{rhs.size_}, head_{rhs.head_}, tail_{rhs.tail_} {
+      rhs.size_ = 0;
+      rhs.head_ = nullptr;
+      rhs.tail_ = nullptr;
+    }
+
     // Copy assignment (lvalue const reference)
-    //LinkedList& operator= (const LinkedList& rhs);
+    // NOTE: invoked when both the lhs and rhs are previously declared lvalues.
+    LinkedList& operator= (const LinkedList& rhs) {
+      // Invoke copy constructor - copy contents of rhs into new tmp lvalue.
+      LinkedList tmp = rhs;
+      // Swap tmp's members into *this.
+      // std::swap invokes one move constructor (for tmp variable) and two move
+      // assignments to do the swapping.
+      std::swap(*this, tmp);
+      // Return the copied list (return type of function).
+      return *this;
+    }
+
     // Move assignment (rvalue reference)
-    //LinkedList& operator= (LinkedList&& rhs);
+    // NOTE: invoked when lhs is previously declared and rhs is an rvalue.
+    // NOTE: `noexcept` specifies function won't throw exceptions - move semantics
+    // won't be applied to types that can throw exceptions on moves.
+    // See: http://blogs.microsoft.co.il/sasha/2014/08/08/make-move-constructors-no-throw/
+    LinkedList& operator= (LinkedList&& rhs) noexcept {
+      std::swap(size_, rhs.size_);
+      std::swap(head_, rhs.head_);
+      std::swap(tail_, rhs.tail_);
+      // Return the moved list (return type of function).
+      return *this;
+    }
 
     // const keyword specifies accessor method - non-mutating.
     int size() const {
@@ -290,15 +336,18 @@ class LinkedList {
       insert(begin(), std::move(data));
     }
 
-    // Remove the node at the front of the list (immediately following the head
+    // Pop the node at the front of the list (immediately following the head
     // sentinel node).
-    void pop_front() {
-      erase(begin());
+    T& pop_front() {
+      iterator b = begin();
+      T& retval = b.retrieve();
+      erase(b);
+      return retval;
     }
 
     void clear() {
       while (!empty()) {
-        pop_front();
+        erase(begin());
       }
     }
 
