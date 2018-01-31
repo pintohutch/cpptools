@@ -11,7 +11,7 @@
 #define CPPTOOLS_LINKEDLIST_H_
 
 #include <cstddef>
-#include <algorithm>
+#include <iostream>
 
 namespace cpptools {
 
@@ -185,6 +185,8 @@ class LinkedList {
     // Single-parameter constructor - rvalue.
     // Explicit guards against implicit type conversions.
     explicit LinkedList(T&& d) {
+      // TODO - find a good logging library.
+      std::cout << "rvalue constructor called\n";
       init();
       // NOTE: since the list is empty, push_front or push_back works here.
       push_front(d);
@@ -203,6 +205,7 @@ class LinkedList {
     // Copy constructor (lvalue const reference)
     // NOTE: invoked when lhs is previously undeclared and rhs is an lvalue.
     LinkedList(const LinkedList& rhs) : size_{rhs.size_} {
+      std::cout << "copy constructor called\n";
       init();
       for (auto& x : rhs) {
         push_back(x);
@@ -215,6 +218,7 @@ class LinkedList {
     // See: http://blogs.microsoft.co.il/sasha/2014/08/08/make-move-constructors-no-throw/
     LinkedList(LinkedList&& rhs) noexcept :
       size_{rhs.size_}, head_{rhs.head_}, tail_{rhs.tail_} {
+      std::cout << "move constructor called\n";
       rhs.size_ = 0;
       rhs.head_ = nullptr;
       rhs.tail_ = nullptr;
