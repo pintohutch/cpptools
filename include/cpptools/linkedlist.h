@@ -184,7 +184,6 @@ class LinkedList {
     }
     // Single-parameter constructor - rvalue.
     // Explicit guards against implicit type conversions.
-    // TODO - how to invoke this in tests?
     explicit LinkedList(T&& d) {
       init();
       // NOTE: since the list is empty, push_front or push_back works here.

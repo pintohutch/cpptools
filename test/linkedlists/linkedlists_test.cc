@@ -1,8 +1,8 @@
 // Tests the LinkedList implementation.
+#include "gtest/gtest.h"
 
 #include "cpptools/linkedlist.h"
 
-#include "gtest/gtest.h"
 
 class LinkedListTest : public ::testing::Test {
   protected:
@@ -27,7 +27,7 @@ TEST_F(LinkedListTest, LValueConstructor) {
 }
 
 TEST_F(LinkedListTest, RValueConstructor) {
-  cpptools::LinkedList<int> ll{0+1};
+  cpptools::LinkedList<int> ll{0};
   EXPECT_EQ(ll.size(), 1);
 }
 
