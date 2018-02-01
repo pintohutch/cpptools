@@ -22,3 +22,12 @@ while coding implementation and convention is take from the
 This repository uses GNU make to compile source and tests. The make targets try
 to follow the standard target conventions laid out by the
 [GNU Coding Standards](https://www.gnu.org/prep/standards/html_node/Standard-Targets.html).
+
+## Clone and set-up.
+```
+git clone https://github.com/dclark87/cpptools
+git submodule update --init
+```
+
+## Make and test
+`make clean test`
