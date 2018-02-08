@@ -73,7 +73,7 @@ void _merge_sort(std::vector<T>& unsorted, int beg, int end) {
 
   // Move sorted tmp array elements back into input.
   for (int i=0; i < tmp.size(); i++) {
-    unsorted[i] = std::move(&tmp[i]);
+    unsorted[i] = std::move(tmp[i]);
   }
 
 }

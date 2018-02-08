@@ -5,9 +5,9 @@ project(cpptools)
 set(CMAKE_CXX_STANDARD 11)
 set(COMMON_INCLUDES ${PROJECT_SOURCE_DIR}/include)
 set(SRCEXT cc)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib/cmake)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib/cmake)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/cmake)
 
 # Includes
 include_directories(${COMMON_INCLUDES})
@@ -16,18 +16,11 @@ include_directories(${COMMON_INCLUDES})
 file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.${SRCEXT})
 list(REMOVE_ITEM SRC_FILES ${PROJECT_SOURCE_DIR}/src/main.${SRCEXT})
 
-# Add as library
-add_library(linkedlist ${SRC_FILES})
-# This is needed because CMake doesn't recognize *.cc files as CXX.
-# See: https://stackoverflow.com/a/16669141/8826268
-set_target_properties(linkedlist PROPERTIES LINKER_LANGUAGE CXX)
-
 # Main executable - link in project libraries.
 add_executable(main ${PROJECT_SOURCE_DIR}/src/main.${SRCEXT})
-target_link_libraries(main linkedlist)
 
 # Configure unit tests to work with googletest.
-add_subdirectory(vendor/googletest)
+add_subdirectory(vendor/googletest ${CMAKE_SOURCE_DIR}/build/cmake/googletest)
 enable_testing()
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
