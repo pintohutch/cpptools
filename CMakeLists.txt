@@ -26,7 +26,8 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 # Gather test files
 #file(GLOB_RECURSE TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.${SRCEXT})
-add_executable(test_all ${PROJECT_SOURCE_DIR}/test/test_all.${SRCEXT})
+add_executable(test_all
+        ${PROJECT_SOURCE_DIR}/test/test_all.${SRCEXT})
 add_executable(linkedlist_test
         ${PROJECT_SOURCE_DIR}/test/linkedlist/linkedlist_test.${SRCEXT})
 add_executable(sort_test

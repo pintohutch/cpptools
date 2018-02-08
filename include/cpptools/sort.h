@@ -53,7 +53,8 @@ void _merge_sort(std::vector<T>& unsorted, int beg, int end) {
   }
 
   // Sort each sorted-half into one vector.
-  std::vector<T> tmp{size};
+  std::vector<T> tmp;
+  tmp.resize(size);
   int l = beg, r = mid, t = 0;
   while (l < mid && r < end) {
     if (unsorted[l] < unsorted[r]) {
