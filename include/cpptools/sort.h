@@ -12,11 +12,6 @@
 #include <iostream>
 #include <vector>
 
-namespace {
-  template <typename T>
-  void _merge_sort(std::vector<T>& unsorted, int beg, int end);
-}
-
 namespace cpptools {
 
 /**
@@ -31,16 +26,7 @@ namespace cpptools {
  * @return the sorted version of the passed-in vector.
  */
 template <typename T>
-void merge_sort(std::vector<T>& unsorted) {
-    return _merge_sort(unsorted, 0, unsorted.size());
-}
-
-}
-
-// Intentionally anonymous namespace so can't be referred to externally.
-namespace {
-template <typename T>
-void _merge_sort(std::vector<T>& unsorted, int beg, int end) {
+void merge_sort(std::vector<T>& unsorted, int beg, int end) {
   int size = end-beg;
   int mid = beg + (end-beg)/2;
   // Lists of size 0 or 1 are already sorted.
@@ -48,8 +34,8 @@ void _merge_sort(std::vector<T>& unsorted, int beg, int end) {
     return;
   }
   else {
-    _merge_sort(unsorted, beg, mid);
-    _merge_sort(unsorted, mid, end);
+    merge_sort(unsorted, beg, mid);
+    merge_sort(unsorted, mid, end);
   }
 
   // Sort each sorted-half into one vector.
@@ -74,10 +60,11 @@ void _merge_sort(std::vector<T>& unsorted, int beg, int end) {
 
   // Move sorted tmp array elements back into input.
   for (int i=0; i < tmp.size(); i++) {
-    unsorted[i] = std::move(tmp[i]);
+    unsorted[beg+i] = std::move(tmp[i]);
   }
 
 }
+
 }
 
 #endif //CPPTOOLS_SORT_H
