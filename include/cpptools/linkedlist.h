@@ -3,7 +3,7 @@
  * Implementation courtesy of "Data structures and algorithm analysis in C++",
  * Fourth edition by Mark Allen Weiss.
  *
- * Copyright 2017 Daniel Clark
+ * Copyright 2018 Daniel Clark
  */
 
 // Define guard
@@ -173,11 +173,13 @@ class LinkedList {
   public:
     // Parameter-less constructor.
     LinkedList() {
+      std::cout << "parameter-less constructor called\n";
       init();
     }
     // Single-parameter constructor - lvalue.
     // Explicit guards against implicit type conversions.
     explicit LinkedList(const T& d) {
+      std::cout << "lvalue constructor called\n";
       init();
       // NOTE: since the list is empty, `push_front` or `push_back` works here.
       push_front(d);
@@ -185,7 +187,6 @@ class LinkedList {
     // Single-parameter constructor - rvalue.
     // Explicit guards against implicit type conversions.
     explicit LinkedList(T&& d) {
-      // TODO - find a good logging library.
       std::cout << "rvalue constructor called\n";
       init();
       // NOTE: since the list is empty, push_front or push_back works here.
@@ -198,6 +199,7 @@ class LinkedList {
 
     // Destructor
     ~LinkedList() {
+      std::cout << "destructor called\n";
       clear();
       delete head_;
       delete tail_;
@@ -227,6 +229,7 @@ class LinkedList {
     // Copy assignment (lvalue const reference)
     // NOTE: invoked when both the lhs and rhs are previously declared lvalues.
     LinkedList& operator= (const LinkedList& rhs) {
+      std::cout << "copy assignment called\n";
       // Invoke copy constructor - copy contents of rhs into new tmp lvalue.
       LinkedList tmp = rhs;
       // Swap tmp's members into *this.
@@ -243,6 +246,7 @@ class LinkedList {
     // won't be applied to types that can throw exceptions on moves.
     // See: http://blogs.microsoft.co.il/sasha/2014/08/08/make-move-constructors-no-throw/
     LinkedList& operator= (LinkedList&& rhs) noexcept {
+      std::cout << "move assignment called\n";
       std::swap(size_, rhs.size_);
       std::swap(head_, rhs.head_);
       std::swap(tail_, rhs.tail_);

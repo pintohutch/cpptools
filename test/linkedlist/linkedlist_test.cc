@@ -1,4 +1,9 @@
-// Tests the LinkedList implementation.
+/** \file linkedlist_test.cc
+ * Unit tests for the cpptools linked list class template.
+ *
+ * Copyright 2018 Daniel Clark
+ */
+
 #include "gtest/gtest.h"
 
 #include "cpptools/linkedlist.h"

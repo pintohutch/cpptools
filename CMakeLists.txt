@@ -29,8 +29,12 @@ enable_testing()
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 # Gather test files
-file(GLOB_RECURSE TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.${SRCEXT})
-add_executable(test_all ${TEST_SRC_FILES})
+#file(GLOB_RECURSE TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.${SRCEXT})
+add_executable(test_all ${PROJECT_SOURCE_DIR}/test/test_all.${SRCEXT})
+add_executable(linkedlist_test
+        ${PROJECT_SOURCE_DIR}/test/linkedlist/linkedlist_test.${SRCEXT})
+add_executable(sort_test
+        ${PROJECT_SOURCE_DIR}/test/sort/sort_test.${SRCEXT})
 target_link_libraries(test_all gtest gtest_main)
-
-#add_test(UnitTests test_all)
+target_link_libraries(linkedlist_test gtest gtest_main)
+target_link_libraries(sort_test gtest gtest_main)
