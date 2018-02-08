@@ -41,38 +41,40 @@ void merge_sort(std::vector<T>& unsorted) {
 namespace {
 template <typename T>
 void _merge_sort(std::vector<T>& unsorted, int beg, int end) {
-  std::vector<T> lhs, rhs;
   int size = end-beg;
+  int mid = beg + (end-beg)/2;
   // Lists of size 0 or 1 are already sorted.
   if (size < 2) {
     return;
   }
   else {
-    _merge_sort(unsorted, beg, end / 2);
-    _merge_sort(unsorted, end / 2, end);
+    _merge_sort(unsorted, beg, mid);
+    _merge_sort(unsorted, mid, end);
   }
 
   // Sort each sorted-half into one vector.
-  std::vector<T> sorted;
-  sorted.resize(size);
-  int l = 0, r = 0, s = 0;
-  while (l < lhs.size() && r < rhs.size()) {
-    if (lhs[l] < rhs[r]) {
-      sorted[s++] = lhs[l++];
+  std::vector<T> tmp{size};
+  int l = beg, r = mid, t = 0;
+  while (l < mid && r < end) {
+    if (unsorted[l] < unsorted[r]) {
+      tmp[t++] = std::move(unsorted[l++]);
     } else {
-      sorted[s++] = rhs[r++];
+      tmp[t++] = std::move(unsorted[r++]);
     }
   }
 
   // Capture any leftovers.
-  while (l < lhs.size()) {
-    sorted[s++] = lhs[l++];
+  while (l < mid) {
+    tmp[t++] = std::move(unsorted[l++]);
   }
-  while (r < rhs.size()) {
-    sorted[s++] = rhs[r++];
+  while (r < end) {
+    tmp[t++] = std::move(unsorted[r++]);
   }
 
-  return;
+  // Move sorted tmp array elements back into input.
+  for (int i=0; i < tmp.size(); i++) {
+    unsorted[i] = std::move(&tmp[i]);
+  }
 
 }
 }

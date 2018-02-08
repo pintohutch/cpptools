@@ -65,7 +65,7 @@ $(MAIN_BIN): $(MAIN_SRC) $(OBJECTS)
 clean:
 	@echo "\nCleaning..."
 	@echo $(HLINES)
-	$(RM) -r $(BUILDDIR) $(TARGET)
+	$(RM) -r $(BINDIR)/* $(BUILDDIR)/* $(LIBDIR)/*
 
 lint:
 	@echo "\nLinting..."

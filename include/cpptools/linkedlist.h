@@ -209,7 +209,9 @@ class LinkedList {
     LinkedList(const LinkedList& rhs) : size_{rhs.size_} {
       std::cout << "copy constructor called\n";
       init();
-      for (auto& x : rhs) {
+      // The `auto&&` is a universal reference.
+      // See: https://isocpp.org/blog/2012/11/universal-references-in-c11-scott-meyers
+      for (auto&& x : rhs) {
         push_back(x);
       }
     }
