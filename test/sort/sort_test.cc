@@ -13,8 +13,6 @@
 
 class MergeSortTest : public ::testing::Test {
   protected:
-    // Reference on setup/teardown vs constructors/destructors:
-    // https://stackoverflow.com/a/13587712
     virtual void SetUp() {
     }
 

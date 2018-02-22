@@ -32,6 +32,9 @@ add_executable(linkedlist_test
         ${PROJECT_SOURCE_DIR}/test/linkedlist/linkedlist_test.${SRCEXT})
 add_executable(sort_test
         ${PROJECT_SOURCE_DIR}/test/sort/sort_test.${SRCEXT})
+add_executable(trees_test
+        ${PROJECT_SOURCE_DIR}/test/trees/trees_test.${SRCEXT})
 target_link_libraries(test_all gtest gtest_main)
 target_link_libraries(linkedlist_test gtest gtest_main)
 target_link_libraries(sort_test gtest gtest_main)
+target_link_libraries(trees_test gtest gtest_main)

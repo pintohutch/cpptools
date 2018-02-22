@@ -1,7 +1,9 @@
-// main.cc
-//
-// Author: Daniel Clark
-
+/**
+ * \file main.cc
+ * Main file for project (for now).
+ *
+ * Copyright 2018 Daniel Clark
+ */
 #include "cpptools/linkedlist.h"
 
 int main() {

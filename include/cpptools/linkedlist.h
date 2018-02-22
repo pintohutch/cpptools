@@ -41,13 +41,15 @@ class LinkedList {
       Node(const T& d = T{}, Node* p = nullptr, Node* n = nullptr) :
           data{d}, prev{p}, next{n} {}
       // rvalue constructor.
-      // NOTE: when a function uses ann rvalue reference argument, it has a name
+      // NOTE: when a function uses an rvalue reference argument, it has a name
       // within the function, and is thus, treated as an lvalue. In this
       // example, the `Node` constructor takes an rvalue reference as its first
       // argument, and then stores that as an lvalue reference in variable `d`.
       // see: https://thbecker.net/articles/rvalue_references/section_05.html
       // This is why `std::move` is used - we want to cast that lvalue `d` into
       // an rvalue to invoke T's move constructor to avoid a copy.
+      // We know it's safe to move because it was passed in as an rvalue, and is
+      // a temporary variable outside of this scope.
       Node(T&& d, Node* p = nullptr, Node* n = nullptr) :
           data{ std::move(d) }, prev{p}, next{n} {}
   };
@@ -190,7 +192,7 @@ class LinkedList {
       std::cout << "rvalue constructor called\n";
       init();
       // NOTE: since the list is empty, push_front or push_back works here.
-      push_front(d);
+      push_front(std::move(d));
     }
 
     // Big Five:
@@ -256,12 +258,12 @@ class LinkedList {
       return *this;
     }
 
-    // const keyword specifies accessor method - non-mutating.
+    // `const` keyword specifies accessor method - non-mutating.
     int size() const {
       return size_;
     }
 
-    // const keyword specifies accessor method - non-mutating.
+    // `const` keyword specifies accessor method - non-mutating.
     bool empty() const {
       return size() == 0;
     }

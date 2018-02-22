@@ -23,6 +23,8 @@ namespace cpptools {
  *
  * @tparam T objects must provide operator< and operator=.
  * @param unsorted unsorted vector.
+ * @param beg beginning index to sort from.
+ * @param end ending index to sort from.
  * @return the sorted version of the passed-in vector.
  */
 template <typename T>

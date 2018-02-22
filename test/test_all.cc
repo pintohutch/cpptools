@@ -1,4 +1,9 @@
-// test_all.cpp runs all unit tests in project.
+/**
+ * \file test_all.cpp
+ * Runs all unit tests in project.
+ *
+ * Copyright 2018 Daniel Clark
+ */
 
 #include "gtest/gtest.h"
 
