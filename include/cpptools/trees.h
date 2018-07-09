@@ -16,6 +16,9 @@ template <typename T>
 class BinarySearchTree {
 
   private:
+    BinarySearchTree* left_;
+    BinarySearchTree* right_;
+    T data_;
     // Passing by reference vs pointer:
     // Reference: http://cplusplus.com/articles/z6vU7k9E
     // 1) Pass by value when the function does not want to modify the parameter
@@ -37,62 +40,96 @@ class BinarySearchTree {
     //    scope of this discussion, but suffice to say that most template
     //    functions take their parameters by value or (const) reference.
     //
-    void dup(const BinarySearchTree& bst, BinarySearchTree& itr) {
-      if (bst.left_ != nullptr) {
-        itr.left_ = new BinarySearchTree{bst.left_->data_};
-        dup(*bst.left_, *itr.left_);
+    static BinarySearchTree* duplicate(const BinarySearchTree* root) {
+      if (root == nullptr) {
+        return nullptr;
       }
-      if (bst.right_ != nullptr) {
-        itr.right_ = new BinarySearchTree{bst.right_->data_};
-        dup(*bst.right_, *itr.right_);
+      auto dup = new BinarySearchTree{root->data_};
+      if (root->left_ != nullptr) {
+        dup->left_ = duplicate(root->left_);
+      }
+      if (root->right_ != nullptr) {
+        dup->right_ = duplicate(root->right_);
+      }
+      return dup;
+    }
+    void _insert(const T& d) {
+      if (d < data_) {
+        if (left_ != nullptr) {
+          left_->_insert(d);
+        } else {
+          left_ = new BinarySearchTree{d};
+        }
+      } else {
+        if (right_ != nullptr) {
+          right_ ->_insert(d);
+        } else {
+          right_ = new BinarySearchTree{d};
+        }
       }
     }
 
   public:
-    explicit BinarySearchTree(const T& d = T{}, BinarySearchTree* l = nullptr,
+    explicit BinarySearchTree(const T& d, BinarySearchTree* l = nullptr,
       BinarySearchTree* r = nullptr) : data_{d}, left_{l}, right_{r} {}
 
-    explicit BinarySearchTree(const T&& d = T{}, BinarySearchTree* l = nullptr,
+    explicit BinarySearchTree(const T&& d, BinarySearchTree* l = nullptr,
       BinarySearchTree* r = nullptr) : data_{std::move(d)}, left_{l}, right_{r} {}
 
     // Destructor
     //~BinarySearchTree();
+
     // Copy Constructor.
     BinarySearchTree(const BinarySearchTree& bst) {
-      BinarySearchTree itr = BinarySearchTree{bst.data_};
-      dup(bst, itr);
-      data_ = itr.data_;
-      left_ = itr.left_;
-      right_ = itr.right_;
+      BinarySearchTree* dup = duplicate(&bst);
+      data_ = dup->data_;
+      left_ = dup->left_;
+      right_ = dup->right_;
     }
-    // Copy assignment.
-    //BinarySearchTree(BinarySearchTree&& bst);
-    // Move constructor.
-    //BinarySearchTree& operator= (const BinarySearchTree& bst);
-    // Move assignment.
-    //BinarySearchTree& operator= (BinarySearchTree&& bst);
 
-    const T& data() {
+    // Move constructor.
+    BinarySearchTree(BinarySearchTree&& bst) noexcept :
+      data_{bst.data_}, left_{bst.left_}, right_{bst.right_} {
+      bst.data_ = T{};
+      bst.left_ = nullptr;
+      bst.right_ = nullptr;
+    }
+
+    // Copy assignment.
+    BinarySearchTree& operator= (const BinarySearchTree& bst) {
+      BinarySearchTree tmp = bst;
+      std::swap(*this, tmp);
+      return *this;
+    }
+
+    // Move assignment.
+    BinarySearchTree& operator= (BinarySearchTree&& bst) noexcept {
+      std::swap(data_, bst.data_);
+      std::swap(left_, bst.left_);
+      std::swap(right_, bst.right_);
+
+      return *this;
+    }
+
+    const T& data() const {
       return data_;
     }
-    const BinarySearchTree* left() {
+
+    BinarySearchTree* left() const {
       return left_;
     }
-    const BinarySearchTree* right() {
+
+    BinarySearchTree* right() const {
       return right_;
     }
 
     void insert(const T& d) {
-
+      _insert(d);
     }
 
     void insert(const T&& d) {
+      _insert(std::move(d));
     }
-
-  private:
-    BinarySearchTree* left_;
-    BinarySearchTree* right_;
-    T data_;
 };
 
 }

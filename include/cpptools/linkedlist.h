@@ -45,7 +45,7 @@ class LinkedList {
       // within the function, and is thus, treated as an lvalue. In this
       // example, the `Node` constructor takes an rvalue reference as its first
       // argument, and then stores that as an lvalue reference in variable `d`.
-      // see: https://thbecker.net/articles/rvalue_references/section_05.html
+      // see: http://thbecker.net/articles/rvalue_references/section_05.html
       // This is why `std::move` is used - we want to cast that lvalue `d` into
       // an rvalue to invoke T's move constructor to avoid a copy.
       // We know it's safe to move because it was passed in as an rvalue, and is
@@ -110,8 +110,6 @@ class LinkedList {
           return current_->data;
         }
 
-        // Non-explicit constructor just to show we can init return types without
-        // explicitly stating `return const_iterator(p)`, but just `return {p}`.
         const_iterator(Node* p) :
           current_{p} {}
 
