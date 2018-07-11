@@ -69,6 +69,17 @@ class BinarySearchTree {
       }
     }
 
+    void prune() {
+      if (left_ != nullptr) {
+        left_->prune();
+      }
+      if (right_ != nullptr) {
+        right_->prune();
+      }
+      left_ = nullptr;
+      right_ = nullptr;
+    }
+
   public:
     explicit BinarySearchTree(const T& d, BinarySearchTree* l = nullptr,
       BinarySearchTree* r = nullptr) : data_{d}, left_{l}, right_{r} {}
@@ -77,7 +88,9 @@ class BinarySearchTree {
       BinarySearchTree* r = nullptr) : data_{std::move(d)}, left_{l}, right_{r} {}
 
     // Destructor
-    //~BinarySearchTree();
+    ~BinarySearchTree() {
+      prune();
+    }
 
     // Copy Constructor.
     BinarySearchTree(const BinarySearchTree& bst) {
